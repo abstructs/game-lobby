@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -7,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatButtonModule, MatCheckboxModule, MatTableModule, 
   MatToolbarModule, MatDialogModule, MatFormFieldModule, MatInputModule, 
-  MatListModule, MatDividerModule, MatSelectModule } from '@angular/material';
+  MatListModule, MatDividerModule, MatSelectModule, MatSnackBarModule } from '@angular/material';
 
 import { LobbyComponent } from './lobby/lobby.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
@@ -23,6 +24,7 @@ import { PlayerDialogComponent } from './player-dialog/player-dialog.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     
     BrowserAnimationsModule,
     MatTableModule,
@@ -34,7 +36,8 @@ import { PlayerDialogComponent } from './player-dialog/player-dialog.component';
     MatInputModule,
     MatListModule,
     MatDividerModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent],

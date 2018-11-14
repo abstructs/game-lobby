@@ -5,7 +5,7 @@
     <button mat-button>Players</button>
     <button mat-button>Games</button>
     <button *ngIf="!isAdmin()" mat-button (click)="onLoginClick()">Login</button>
-    <button *ngIf="isAdmin()" mat-button (click)="onDeletePlayerClick()">Logout</button>
+    <button *ngIf="isAdmin()" mat-button (click)="onLogoutClick()">Logout</button>
 </mat-toolbar>
 <table mat-table [dataSource]="tableData" class="mat-elevation-z8">
   <ng-container matColumnDef="playerName">
