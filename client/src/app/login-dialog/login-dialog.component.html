@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Admin Login</h2>
+<mat-dialog-content>
+  <div class="container">
+    <mat-form-field>
+      <input matInput placeholder="Username">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="password" placeholder="Password">
+    </mat-form-field>
+    
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button [mat-dialog-close]="true">Login</button>
+</mat-dialog-actions>
