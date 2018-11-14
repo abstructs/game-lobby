@@ -55,7 +55,7 @@ export class PlayerDialogComponent implements OnInit {
   }
 
   onUpdateClick() {
-    console.log(this.playerForm.value);
+    this.dialogRef.close(this.playerForm.value);
   }
 
   onJoinClick() {
