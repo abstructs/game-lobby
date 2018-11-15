@@ -127,8 +127,8 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button (click)="onJoinClick()" *ngIf="getMode() == PlayerDialogState.SHOW" mat-button [mat-dialog-close]="true">Join</button>
-  <button (click)="onAddClick()" *ngIf="getMode() == PlayerDialogState.ADD" mat-button [mat-dialog-close]="true">Add</button>
-  <button (click)="onUpdateClick()" *ngIf="getMode() == PlayerDialogState.EDIT" mat-button [mat-dialog-close]="true">Update</button>
+  <button (click)="onCloseClick()" mat-button>Cancel</button>
+  <button (click)="onJoinClick()" *ngIf="getMode() == PlayerDialogState.SHOW" mat-button="true">Join</button>
+  <button (click)="onAddClick()" *ngIf="getMode() == PlayerDialogState.ADD" mat-button="true">Add</button>
+  <button (click)="onUpdateClick()" *ngIf="getMode() == PlayerDialogState.EDIT" mat-button="true">Update</button>
 </mat-dialog-actions>

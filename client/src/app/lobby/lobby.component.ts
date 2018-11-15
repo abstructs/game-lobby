@@ -108,8 +108,11 @@ export class LobbyComponent implements OnInit {
       data: [PlayerDialogState.ADD, this.playerTableData[index]],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
-      this.playerTableData.push(player);
-      this.table.renderRows();
+      console.log(player);
+      if(player) {
+        this.playerTableData.push(player);
+        this.table.renderRows();
+      }
     });
   }
 

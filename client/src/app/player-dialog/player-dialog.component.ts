@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Player } from '../lobby/lobby.component';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 const OPTIONS: string[] = ["Option 1", "Option 2", "Option 3"];
 
@@ -23,7 +23,10 @@ export class PlayerDialogComponent implements OnInit {
   mode: string;
 
   playerForm = new FormGroup({
-    playerName: new FormControl(''),
+    playerName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(1)
+    ]),
     rank: new FormControl(''),
     score: new FormControl(''),
     time: new FormControl(''),
@@ -35,6 +38,8 @@ export class PlayerDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<PlayerDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: [PlayerDialogState, Player]) {
+      dialogRef.disableClose = true;
+
       this.mode = data[0];
       this.playerData = data[1];
       
@@ -81,7 +86,8 @@ export class PlayerDialogComponent implements OnInit {
   getPlayer(): Player {
     return this.playerData;
   }
-  onNoClick(): void {
+
+  onCloseClick(): void {
     this.dialogRef.close();
   }
 
