@@ -52,6 +52,7 @@
   <div [formGroup]="playerForm" *ngIf="getMode() == PlayerDialogState.EDIT" class="container" id="edit_player_dialog">
       <mat-form-field>
         <input formControlName="playerName" matInput placeholder="Player" value="{{ getPlayer().playerName }}">
+        <mat-error *ngIf="playerName.invalid && (playerName.dirty || playerName.touched)">Invalid player name</mat-error>
       </mat-form-field>
       
       <mat-form-field>
@@ -60,14 +61,17 @@
             {{ rank }}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="rank.invalid && (rank.dirty || rank.touched)">Invalid player name</mat-error>
       </mat-form-field>
   
       <mat-form-field>
         <input formControlName="score" matInput placeholder="Score" value="{{ getPlayer().score }}">
+        <mat-error *ngIf="score.invalid && (score.dirty || score.touched)">Invalid player name</mat-error>
       </mat-form-field>
   
       <mat-form-field>
         <input formControlName="time" matInput placeholder="Time" value="{{ getPlayer().time }}">
+        <mat-error *ngIf="time.invalid && (time.dirty || time.touched)">Invalid player name</mat-error>
       </mat-form-field>
   
       <mat-form-field>
@@ -76,6 +80,7 @@
             {{ game }}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="gamePlayed.invalid && (gamePlayed.dirty || gamePlayed.touched)">Invalid player name</mat-error>
       </mat-form-field>
   
       <mat-form-field>
@@ -84,6 +89,7 @@
             {{ status }}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="status.invalid && (status.dirty || status.touched)">Invalid player name</mat-error>
       </mat-form-field>
   </div>
 
@@ -91,6 +97,7 @@
   <div [formGroup]="playerForm" *ngIf="getMode() == PlayerDialogState.ADD" class="container" id="add_player_dialog">
     <mat-form-field>
       <input formControlName="playerName" matInput placeholder="Player">
+      <mat-error *ngIf="playerName.invalid">Invalid player name</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -99,14 +106,17 @@
           {{ rank }}
         </mat-option>
       </mat-select>
+      <mat-error *ngIf="rank.invalid">Invalid rank</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <input formControlName="score" matInput placeholder="Score">
+      <mat-error *ngIf="score.invalid">Invalid score</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <input formControlName="time" matInput placeholder="Time">
+      <mat-error *ngIf="time.invalid">Invalid time</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -115,6 +125,7 @@
           {{ game }}
         </mat-option>
       </mat-select>
+      <mat-error *ngIf="gamePlayed.invalid">Invalid game</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -123,6 +134,7 @@
           {{ status }}
         </mat-option>
       </mat-select>
+      <mat-error *ngIf="status.invalid">Invalid status</mat-error>
     </mat-form-field>
   </div>
 </mat-dialog-content>

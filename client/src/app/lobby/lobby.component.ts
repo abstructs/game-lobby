@@ -60,6 +60,7 @@ export class LobbyComponent implements OnInit {
   LobbyTab = LobbyTab;
 
   constructor(public dialog: MatDialog, public snackBar: MatSnackBar) { 
+    
     this.admin = false;
     this.tab = LobbyTab.PLAYERS;
   }
@@ -85,12 +86,16 @@ export class LobbyComponent implements OnInit {
   }
 
   onLoginClick(): void {
-    this.admin = true;
+    this.openLoginDialog();
   }
 
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
-      width: "50%"
+      width: "60%"
+    }).afterClosed().subscribe((loggedIn: boolean) => {
+      if(loggedIn) {
+        this.admin = true;
+      }
     });
   }
 
@@ -129,8 +134,10 @@ export class LobbyComponent implements OnInit {
       data: [PlayerDialogState.EDIT, this.playerTableData[index]],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
-      this.playerTableData[index] = player;
-      this.table.renderRows();
+      if(player) {
+        this.playerTableData[index] = player;
+        this.table.renderRows();
+      }
     });
   }
 

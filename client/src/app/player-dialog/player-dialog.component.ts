@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
 import { Player } from '../lobby/lobby.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -22,48 +22,99 @@ export class PlayerDialogComponent implements OnInit {
   playerData: Player;
   mode: string;
 
-  playerForm = new FormGroup({
-    playerName: new FormControl('', [
-      Validators.required,
-      Validators.minLength(1)
-    ]),
-    rank: new FormControl(''),
-    score: new FormControl(''),
-    time: new FormControl(''),
-    gamePlayed: new FormControl(''),
-    status: new FormControl('')
-  });
+  playerForm: FormGroup;
+
+  ngOnInit() {
+  }
+  
+  get playerName() {
+    return this.playerForm.get('playerName');
+  }
+
+  get rank() {
+    return this.playerForm.get('rank');
+  }
+
+  get time() {
+    return this.playerForm.get('time');
+  }
+
+  get score() {
+    return this.playerForm.get('score');
+  }
+
+  get gamePlayed() {
+    return this.playerForm.get('gamePlayed');
+  }
+
+  get status() {
+    return this.playerForm.get('status');
+  }
 
   PlayerDialogState = PlayerDialogState;
 
   constructor(public dialogRef: MatDialogRef<PlayerDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: [PlayerDialogState, Player]) {
+    @Inject(MAT_DIALOG_DATA) public data: [PlayerDialogState, Player],
+    public snackBar: MatSnackBar) {
       dialogRef.disableClose = true;
 
       this.mode = data[0];
       this.playerData = data[1];
       
-      if(this.playerData) {
-        this.playerForm = new FormGroup({
-          playerName: new FormControl(this.playerData.playerName),
-          rank: new FormControl(this.playerData.rank),
-          score: new FormControl(this.playerData.score),
-          time: new FormControl(this.playerData.time),
-          gamePlayed: new FormControl(this.playerData.gamePlayed),
-          status: new FormControl(this.playerData.status)
-        });
-      }
+      // if(this.playerData) {
+      this.playerForm = new FormGroup({
+        playerName: new FormControl(this.playerData ? this.playerData.playerName : '', [
+          Validators.required
+        ]),
+        rank: new FormControl(this.playerData ? this.playerData.rank : '', [
+          Validators.required
+        ]),
+        score: new FormControl(this.playerData ? this.playerData.score: '', [
+          Validators.required
+        ]),
+        time: new FormControl(this.playerData ? this.playerData.time : '', [
+          Validators.required
+        ]),
+        gamePlayed: new FormControl(this.playerData ? this.playerData.gamePlayed : '', [
+          Validators.required
+        ]),
+        status: new FormControl(this.playerData ? this.playerData.status : '', [
+          Validators.required
+        ])
+      });
     }
+  
+  setFormTouched(formGroup: FormGroup): void {
+    (<any>Object).values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
 
-  onAddClick() {
-    this.dialogRef.close(this.playerForm.value);
+      if (control.controls) {
+        this.setFormTouched(control);
+      }
+    });
   }
 
-  onUpdateClick() {
-    this.dialogRef.close(this.playerForm.value);
+  onAddClick(): void {
+    if(this.playerForm.invalid) {
+      this.setFormTouched(this.playerForm);
+      this.snackBar.open("Please check for errors.", "CLOSE");
+    } else {
+      this.dialogRef.close(this.playerForm.value);
+      this.snackBar.open("Successfully added player!", "OK");
+    }
   }
 
-  onJoinClick() {
+  onUpdateClick(): void {
+    if(this.playerForm.invalid) {
+      this.setFormTouched(this.playerForm);
+      this.snackBar.open("Please check for errors", "CLOSE");
+    } else {
+      this.dialogRef.close(this.playerForm.value);
+      this.snackBar.open("Successfully updated player!", "OK");
+    }
+  }
+
+  onJoinClick(): void {
     console.log(this.playerForm.value);
   }
   
@@ -80,7 +131,7 @@ export class PlayerDialogComponent implements OnInit {
   }
 
   getStatuses() {
-    return ["Avalible", "Busy"];
+    return ["Available", "Busy"];
   }
 
   getPlayer(): Player {
@@ -89,8 +140,5 @@ export class PlayerDialogComponent implements OnInit {
 
   onCloseClick(): void {
     this.dialogRef.close();
-  }
-
-  ngOnInit() {
   }
 }
