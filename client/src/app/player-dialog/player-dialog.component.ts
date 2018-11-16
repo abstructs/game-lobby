@@ -27,8 +27,8 @@ export class PlayerDialogComponent implements OnInit {
   ngOnInit() {
   }
   
-  get playerName() {
-    return this.playerForm.get('playerName');
+  get name() {
+    return this.playerForm.get('name');
   }
 
   get rank() {
@@ -63,7 +63,7 @@ export class PlayerDialogComponent implements OnInit {
       
       // if(this.playerData) {
       this.playerForm = new FormGroup({
-        playerName: new FormControl(this.playerData ? this.playerData.playerName : '', [
+        name: new FormControl(this.playerData ? this.playerData.name : '', [
           Validators.required
         ]),
         rank: new FormControl(this.playerData ? this.playerData.rank : '', [

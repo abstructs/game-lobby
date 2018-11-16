@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// move to .env
 const url = process.env.DB_URL;
 
 mongoose.connect(url);
@@ -10,6 +9,22 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 const gameSchema = new mongoose.Schema({
     title: {
+        type: String,
+        required: true
+    },
+    genre: {
+        type: String,
+        required: true
+    },
+    publisher: {
+        type: String,
+        required: true
+    },
+    release: {
+        type: String,
+        required: true
+    },
+    status: {
         type: String,
         required: true
     }

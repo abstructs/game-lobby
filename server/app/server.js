@@ -10,6 +10,6 @@ app.use(bodyParser.json());
 
 app.use('/user', require('./users/routes'));
 app.use('/player', require('./players/routes'));
-app.use('/games', require('./games/routes'));
+app.use('/game', require('./games/routes'));
 
 app.listen(port, () => console.log(`Now listening on port ${port}`));

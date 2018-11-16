@@ -59,5 +59,5 @@ export class LoginDialogComponent implements OnInit {
     }
   }
 
-    ngOnInit() { }
+  ngOnInit() { }
 }

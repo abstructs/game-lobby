@@ -5,7 +5,7 @@
   <div *ngIf="getMode() == PlayerDialogState.SHOW" class="container" id="show_player_dialog">
     <mat-list>
       <mat-list-item>
-        Player: {{ getPlayer().playerName }}
+        Player: {{ getPlayer().name }}
       </mat-list-item>
     </mat-list>
 
@@ -51,8 +51,8 @@
   <!-- Edit Player Dialog -->
   <div [formGroup]="playerForm" *ngIf="getMode() == PlayerDialogState.EDIT" class="container" id="edit_player_dialog">
       <mat-form-field>
-        <input formControlName="playerName" matInput placeholder="Player" value="{{ getPlayer().playerName }}">
-        <mat-error *ngIf="playerName.invalid && (playerName.dirty || playerName.touched)">Invalid player name</mat-error>
+        <input formControlName="name" matInput placeholder="Player" value="{{ getPlayer().name }}">
+        <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Invalid player name</mat-error>
       </mat-form-field>
       
       <mat-form-field>
@@ -96,8 +96,8 @@
     <!-- Add Player Dialog -->
   <div [formGroup]="playerForm" *ngIf="getMode() == PlayerDialogState.ADD" class="container" id="add_player_dialog">
     <mat-form-field>
-      <input formControlName="playerName" matInput placeholder="Player">
-      <mat-error *ngIf="playerName.invalid">Invalid player name</mat-error>
+      <input formControlName="name" matInput placeholder="Player">
+      <mat-error *ngIf="name.invalid">Invalid player name</mat-error>
     </mat-form-field>
 
     <mat-form-field>

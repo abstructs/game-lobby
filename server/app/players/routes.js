@@ -24,30 +24,61 @@ const authenticateUser = (req, res, next) => {
 }
 
 router.get('/', (req, res) => {
-    const query = Player.find();
-    query.exec((err, docs) => {
-        console.log(docs);
+    Player.find().exec((err, users) => {
+        if(err) {
+            console.trace(err);
+            throw err;
+        }
+
+        res.status(200).send({ users });
     });
-    
-    res.send('got player get all');
 });
 
 router.post('/add', authenticateUser, (req, res) => {
-    // const player = new Player(req.body.player);
-
-    // player.save(err => {
-    //     if(err) throw err;
-    // });
-
-    res.send('got player add');
+    if(req.body.player) {
+        const player = new Player(req.body.player);
+        
+        player.save(err => {
+            if(err) {
+                console.trace(err);
+                throw err;
+            }
+    
+            res.status(200).send({ success: "Successfully added player.", player });
+        });
+    } else {
+        res.status(400).send({ errors: { player: "Expected a player." }});
+    }
 });
 
-router.post('/edit', (req, res) => {
-    res.send('got player edit');
+router.patch('/edit/:playerId', authenticateUser, (req, res) => {
+    const player = req.body.player;
+    const playerId = req.params.playerId;
+
+    if(player) {
+        Player.findOneAndUpdate({ _id: playerId }, player, (err, player) => {
+            if(err) {
+                console.trace(err);
+                throw err;
+            }
+            
+            res.status(200).send({ success: "Succesfully updated player." });
+        });
+    } else {
+        res.status(400).send({ errors: { player: "Expected a player." }});
+    }
 });
 
-router.delete('/delete', (req, res) => {
-    res.send('got player delete');
+router.delete('/delete/:id', authenticateUser, (req, res) => {
+    const playerId = req.params.id;
+    Player.findOneAndDelete({ _id: playerId }, (err, response) => {
+        if(err) {
+            console.trace(err);
+            throw err;
+        }
+
+        res.status(200).send({ success: "Successfully deleted player." });
+    });
 });
 
 module.exports = router;
