@@ -19,6 +19,7 @@ const authenticateUser = (req, res, next) => {
         const decoded = jwt.verify(token, cert);
         next();
     } catch(err) {
+        console.trace(err);
         return res.status(403).send({ errors: { auth: "Invalid credential." }});
     }
 }
