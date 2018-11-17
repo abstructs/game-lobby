@@ -13,6 +13,9 @@ import { MatButtonModule, MatCheckboxModule, MatTableModule,
 import { LobbyComponent } from './lobby/lobby.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { PlayerDialogComponent } from './player-dialog/player-dialog.component';
+import { UserService } from './user.service';
+import { BackendService } from './backend.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,6 +28,7 @@ import { PlayerDialogComponent } from './player-dialog/player-dialog.component';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    HttpClientModule,
     
     BrowserAnimationsModule,
     MatTableModule,
@@ -39,7 +43,10 @@ import { PlayerDialogComponent } from './player-dialog/player-dialog.component';
     MatSelectModule,
     MatSnackBarModule
   ],
-  providers: [],
+  providers: [
+    BackendService,
+    UserService
+  ],
   bootstrap: [AppComponent],
   entryComponents: [
     LoginDialogComponent,

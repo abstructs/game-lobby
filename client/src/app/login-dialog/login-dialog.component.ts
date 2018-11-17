@@ -1,26 +1,28 @@
 import { Component, OnInit, Inject, Injectable } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { FormGroup, FormControl, Validators, ValidatorFn, AsyncValidator, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ValidatorFn, AsyncValidator, ValidationErrors, AbstractControl } from '@angular/forms';
+import { UserService } from '../user.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-// @Injectable({ providedIn: 'root' })
-// export class UniqueUsername implements AsyncValidator {
-//   constructor(private heroesService: LoginDialogComponent) {}
+@Injectable({ providedIn: 'root' })
+export class UniqueUsernameValidator implements AsyncValidator {
+  constructor(private userService: UserService) { }
 
-//   validate(
-//     ctrl: AbstractControl
-//   ): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-//     return this.heroesService.isAlterEgoTaken(ctrl.value).pipe(
-//       map(isTaken => (isTaken ? { uniqueAlterEgo: true } : null)),
-//       catchError(() => null)
-//     );
-//   }
-// }
+  validate(ctrl: AbstractControl): Observable<ValidationErrors> {
+    return this.userService.usernameTaken(ctrl.value).pipe(
+      map(isTaken => {
+        return { uniqueUsername: !isTaken }
+      })
+    )
+  }
+}
 
 @Component({
   selector: 'app-login-dialog',
   templateUrl: './login-dialog.component.html',
-  styleUrls: ['./login-dialog.component.css']
+  styleUrls: ['./login-dialog.component.css'],
+  providers:  [ UserService ]
 })
 export class LoginDialogComponent implements OnInit {
   loginForm: FormGroup;
@@ -45,14 +47,17 @@ export class LoginDialogComponent implements OnInit {
     return this.usernameTaken;
   }
 
-  constructor(public dialogRef:  MatDialogRef<LoginDialogComponent>) { 
+  constructor(public dialogRef:  MatDialogRef<LoginDialogComponent>, 
+    private uniqueUsernameValidator: UniqueUsernameValidator) { 
     this.dialogRef.disableClose = true;
     this.hidePassword = true;
     this.usernameTaken = false;
 
     this.loginForm = new FormGroup({
       username: new FormControl('', [
-        Validators.required
+        Validators.required,
+        // loses context without arrow function (this becomes undefined), can also bind context to validate
+        (ctrl: AbstractControl) => this.uniqueUsernameValidator.validate(ctrl)
       ]),
       password: new FormControl('', [
         Validators.required
@@ -86,6 +91,7 @@ export class LoginDialogComponent implements OnInit {
   }
 
   onLoginClick() {
+    
     // this.postData("http://localhost:3000/user/valid-username", {
     //   user: {
     //     ...this.loginForm.value
