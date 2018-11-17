@@ -14,8 +14,13 @@ export class UserService {
     private cookieService: CookieService) { }
 
   getToken(): string {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    return currentUser.token;
+    // const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    // return currentUser.token;
+    return this.cookieService.get('token');
+  }
+
+  isLoggedIn(): boolean {
+    return this.getToken() != '';
   }
 
   setToken(token: string) {

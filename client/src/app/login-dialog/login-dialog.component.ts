@@ -90,7 +90,6 @@ export class LoginDialogComponent implements OnInit {
       this.userService.authenticate(this.username.value, this.password.value).subscribe(validCreds => {
         if(validCreds) {
           this.snackBar.open("Successfully logged on", "OK");
-          console.log("logged on!");
           this.dialogRef.close();
         } else {
           this.snackBar.open("Incorrect password", "OK");
@@ -99,7 +98,7 @@ export class LoginDialogComponent implements OnInit {
     } else {
       this.snackBar.open("Please check the form for errors", "OK");
     }
-    
+
     this.setFormTouched(this.loginForm);
   }
 

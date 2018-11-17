@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTable, MatSnackBar } from '@angular/material';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { PlayerDialogComponent, PlayerDialogState } from '../player-dialog/player-dialog.component';
+import { UserService } from '../user.service';
 
 export interface Player {
   name: string;
@@ -42,7 +43,8 @@ const GAME_DATA: Game[] = [
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
-  styleUrls: ['./lobby.component.css']
+  styleUrls: ['./lobby.component.css'],
+  providers:  [ UserService ]
 })
 export class LobbyComponent implements OnInit {
 
@@ -55,13 +57,10 @@ export class LobbyComponent implements OnInit {
   gameTableData: Game[] = GAME_DATA;
   gameTableColumns: string[] = ["title", "platform", "genre", "publisher", "release", "status"];
 
-  private admin: boolean;
-
   LobbyTab = LobbyTab;
 
-  constructor(public dialog: MatDialog, public snackBar: MatSnackBar) { 
-    
-    this.admin = false;
+  constructor(public dialog: MatDialog, public snackBar: MatSnackBar,
+    private userService: UserService) { 
     this.tab = LobbyTab.PLAYERS;
   }
 
@@ -77,12 +76,12 @@ export class LobbyComponent implements OnInit {
     this.tab = LobbyTab.PLAYERS;
   }
 
-  isAdmin(): boolean {
-    return this.admin;
+  isLoggedIn(): boolean {
+    return this.userService.isLoggedIn();
   }
 
   onLogoutClick(): void {
-    this.admin = false;
+    this.userService.revokeToken();
   }
 
   onLoginClick(): void {
@@ -92,10 +91,6 @@ export class LobbyComponent implements OnInit {
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: "60%"
-    }).afterClosed().subscribe((loggedIn: boolean) => {
-      if(loggedIn) {
-        this.admin = true;
-      }
     });
   }
 
