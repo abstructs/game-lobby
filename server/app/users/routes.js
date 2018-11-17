@@ -100,8 +100,12 @@ router.post('/login', (req, res) => {
     });
 });
 
-router.post('/logout', (req, res) => {
-    
+router.post('/valid-username', validUsername, (req, res) => {
+    res.status(200).send({ success: "Availible username." });
 });
+
+// router.post('/logout', userAuthenticated, (req, res) => {
+    
+// });
 
 module.exports = router;

@@ -3,7 +3,9 @@
   <div [formGroup]="loginForm" class="container">
     <mat-form-field>
       <input formControlName="username" matInput placeholder="Username">
-      <mat-error *ngIf="username.invalid && (username.dirty || username.touched)">Invalid username</mat-error>
+      <!-- <mat-error *ngIf="username.invalid && (username.dirty || username.touched)">Invalid username</mat-error> -->
+      <!-- <mat-error *ngIf="usernameIsTaken">Username is taken</mat-error> -->
+      <mat-error *ngIf="!(username.invalid)">Valid username</mat-error>
     </mat-form-field>
 
     <mat-form-field>

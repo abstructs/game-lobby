@@ -1,0 +1,20 @@
+{
+  "name": "game-lobby",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/app/server.js",
+    "dev-start": "nodemon server/app/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abstructs/game-lobby.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abstructs/game-lobby/issues"
+  },
+  "homepage": "https://github.com/abstructs/game-lobby#readme"
+}
