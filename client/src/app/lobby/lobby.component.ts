@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTable, MatSnackBar } from '@angular/material';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { PlayerDialogComponent, PlayerDialogState } from '../player-dialog/player-dialog.component';
-import { UserService } from '../user.service';
+import { UserService } from '../services/user.service';
 
 export interface Player {
   name: string;
@@ -108,11 +108,14 @@ export class LobbyComponent implements OnInit {
       data: [PlayerDialogState.ADD, this.playerTableData[index]],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
-      console.log(player);
-      if(player) {
-        this.playerTableData.push(player);
-        this.table.renderRows();
-      }
+
+      // console.log()
+      // console.log(player);
+      // if(player) {
+      //   this.playerTableData.push(player);
+      //   this.table.renderRows();
+      // }
+
     });
   }
 

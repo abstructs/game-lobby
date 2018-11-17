@@ -1,9 +1,9 @@
-import { Component, OnInit, Inject, Injectable } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
-import { FormGroup, FormControl, Validators, ValidatorFn, AsyncValidator, ValidationErrors, AbstractControl } from '@angular/forms';
-import { UserService } from '../user.service';
+import { Component, OnInit, Injectable } from '@angular/core';
+import { MatDialogRef, MatSnackBar } from '@angular/material';
+import { FormGroup, FormControl, Validators, AsyncValidator, ValidationErrors, AbstractControl } from '@angular/forms';
+import { UserService } from '../services/user.service';
 import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UniqueUsernameValidator implements AsyncValidator {
