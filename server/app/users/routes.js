@@ -3,6 +3,8 @@ const User = require('./schema');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
+const path = require('path');
+
 const saltRounds = 10;
 
 const router = express.Router();
@@ -56,7 +58,7 @@ router.post('/signup', validUsername, (req, res) => {
                     return;
                 }
 
-                const cert = fs.readFileSync('private.key');
+                const cert = fs.readFileSync(path.resolve(__dirname) + '/../../private.key');
         
                 const token = jwt.sign({ username }, cert);
 
@@ -87,7 +89,7 @@ router.post('/login', (req, res) => {
 
         bcrypt.compare(password, user.password, (err, isValid) => {
             if(isValid) {
-                const cert = fs.readFileSync('private.key');
+                const cert = fs.readFileSync(path.resolve(__dirname) + '/../../private.key');
                 const token = jwt.sign({ username }, cert);
                 
                 res.status(200).send({ success: "Valid user.", auth: { token } });

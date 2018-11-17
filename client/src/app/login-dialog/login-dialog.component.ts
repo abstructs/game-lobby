@@ -1,22 +1,22 @@
 import { Component, OnInit, Inject, Injectable } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { FormGroup, FormControl, Validators, ValidatorFn, AsyncValidator, ValidationErrors, AbstractControl } from '@angular/forms';
 import { UserService } from '../user.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class UniqueUsernameValidator implements AsyncValidator {
   constructor(private userService: UserService) { }
 
-  validate(ctrl: AbstractControl): Observable<ValidationErrors> {
+  validate(ctrl: AbstractControl): Observable<ValidationErrors | null> {
     return this.userService.usernameTaken(ctrl.value).pipe(
       map(isTaken => {
-        return { uniqueUsername: !isTaken }
+        return isTaken ? null : { usernameTaken: false };
       })
-    )
+    );
   }
-}
+} 
 
 @Component({
   selector: 'app-login-dialog',
@@ -27,7 +27,6 @@ export class UniqueUsernameValidator implements AsyncValidator {
 export class LoginDialogComponent implements OnInit {
   loginForm: FormGroup;
   hidePassword: boolean;
-  usernameTaken: boolean;
 
   get username() {
     return this.loginForm.get('username');
@@ -41,21 +40,17 @@ export class LoginDialogComponent implements OnInit {
     return this.hidePassword;
   }
 
-  get usernameIsTaken() {
-    console.log('get')
-    console.log(this.usernameTaken);
-    return this.usernameTaken;
-  }
-
   constructor(public dialogRef:  MatDialogRef<LoginDialogComponent>, 
-    private uniqueUsernameValidator: UniqueUsernameValidator) { 
+    private uniqueUsernameValidator: UniqueUsernameValidator,
+    private userService: UserService,
+    public snackBar: MatSnackBar) { 
     this.dialogRef.disableClose = true;
     this.hidePassword = true;
-    this.usernameTaken = false;
 
     this.loginForm = new FormGroup({
       username: new FormControl('', [
-        Validators.required,
+        Validators.required
+      ], [
         // loses context without arrow function (this becomes undefined), can also bind context to validate
         (ctrl: AbstractControl) => this.uniqueUsernameValidator.validate(ctrl)
       ]),
@@ -91,28 +86,21 @@ export class LoginDialogComponent implements OnInit {
   }
 
   onLoginClick() {
+    if(this.loginForm.valid) {
+      this.userService.authenticate(this.username.value, this.password.value).subscribe(validCreds => {
+        if(validCreds) {
+          this.snackBar.open("Successfully logged on", "OK");
+          console.log("logged on!");
+          this.dialogRef.close();
+        } else {
+          this.snackBar.open("Incorrect password", "OK");
+        }
+      });
+    } else {
+      this.snackBar.open("Please check the form for errors", "OK");
+    }
     
-    // this.postData("http://localhost:3000/user/valid-username", {
-    //   user: {
-    //     ...this.loginForm.value
-    //   }
-    // }).then(res => {
-    //   switch(res.status) {
-    //     case 200:
-    //       // console.log('success')
-    //       // this.usernameTaken = false;
-    //       // this.loginForm.invalid ? this.setFormTouched(this.loginForm) : console.log("post data");
-    //       break;
-    //     default:
-    //       // this.usernameTaken = true;
-    //       // console.log(this);
-    //       // console.log(this.usernameIsTaken && this.username.valid)
-    //       // console.log("invalid");
-    //       break;
-    //   }
-    // });
-
-    // this.setFormTouched(this.loginForm);
+    this.setFormTouched(this.loginForm);
   }
 
   ngOnInit() { }

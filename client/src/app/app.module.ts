@@ -17,6 +17,8 @@ import { UserService } from './user.service';
 import { BackendService } from './backend.service';
 import { HttpClientModule } from '@angular/common/http';
 
+import { CookieService } from 'ngx-cookie-service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +47,8 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   providers: [
     BackendService,
-    UserService
+    UserService,
+    CookieService
   ],
   bootstrap: [AppComponent],
   entryComponents: [

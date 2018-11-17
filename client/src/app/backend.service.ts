@@ -11,6 +11,15 @@ export class BackendService {
 
   constructor(private http: HttpClient) { }
 
+  authenticate(username: string, password: string): Observable<Object> {
+    return this.http.post(`${this.api_url}/user/login`, {
+      user: {
+        username,
+        password
+      }
+    });
+  }
+
   validUsername(username: string): Observable<Object> {
     return this.http.post(`${this.api_url}/user/valid-username`, {
       user: {
