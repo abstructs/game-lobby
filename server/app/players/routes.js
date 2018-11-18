@@ -1,6 +1,7 @@
 const express = require('express');
 const Player = require('./schema');
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const fs = require('fs');
 
 const router = express.Router();
@@ -13,7 +14,7 @@ const authenticateUser = (req, res, next) => {
     }
 
     const token = auth.split(' ')[1];
-    const cert = fs.readFileSync('private.key');
+    const cert = fs.readFileSync(path.resolve(__dirname) + '/../../private.key');
 
     try {
         const decoded = jwt.verify(token, cert);
@@ -25,17 +26,17 @@ const authenticateUser = (req, res, next) => {
 }
 
 router.get('/', (req, res) => {
-    Player.find().exec((err, users) => {
+    Player.find().exec((err, players) => {
         if(err) {
             console.trace(err);
             throw err;
         }
 
-        res.status(200).send({ users });
+        res.status(200).send({ players });
     });
 });
 
-router.post('/add', authenticateUser, (req, res) => {
+router.post('/add', (req, res) => {
     if(req.body.player) {
         const player = new Player(req.body.player);
         

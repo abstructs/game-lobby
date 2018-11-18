@@ -8,16 +8,21 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatButtonModule, MatCheckboxModule, MatTableModule, 
   MatToolbarModule, MatDialogModule, MatFormFieldModule, MatInputModule, 
-  MatListModule, MatDividerModule, MatSelectModule, MatSnackBarModule } from '@angular/material';
+  MatListModule, MatDividerModule, MatSelectModule, MatSnackBarModule,
+  MatProgressBarModule } from '@angular/material';
 
 import { LobbyComponent } from './lobby/lobby.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { PlayerDialogComponent } from './player-dialog/player-dialog.component';
-import { UserService } from './services/user.service';
-import { BackendService } from './services/backend.service';
+
 import { HttpClientModule } from '@angular/common/http';
 
+import { UserService } from './services/user.service';
+import { BackendService } from './services/backend.service';
+import { HelperService } from './services/helper.service';
 import { CookieService } from 'ngx-cookie-service';
+
+
 
 @NgModule({
   declarations: [
@@ -43,12 +48,14 @@ import { CookieService } from 'ngx-cookie-service';
     MatListModule,
     MatDividerModule,
     MatSelectModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressBarModule
   ],
   providers: [
     BackendService,
     UserService,
-    CookieService
+    CookieService,
+    HelperService
   ],
   bootstrap: [AppComponent],
   entryComponents: [

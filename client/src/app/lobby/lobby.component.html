@@ -7,7 +7,6 @@
     <button (click)="onLoginClick()" mat-button *ngIf="!isLoggedIn()">Login</button>
     <button (click)="onLogoutClick()" mat-button *ngIf="isLoggedIn()">Logout</button>
 </mat-toolbar>
-
 <table *ngIf="getTab() == LobbyTab.PLAYERS" mat-table [dataSource]="playerTableData" class="mat-elevation-z8">
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Player </th>
@@ -90,4 +89,5 @@
     <tr mat-row *matRowDef="let row; columns: gameTableColumns;"></tr>
   </table>
 
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 <router-outlet></router-outlet>

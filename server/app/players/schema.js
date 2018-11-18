@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // move to .env
 const url = process.env.DB_URL;
 
-mongoose.connect(url);
+mongoose.connect(url, { useNewUrlParser: true });
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));

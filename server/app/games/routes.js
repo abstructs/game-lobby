@@ -1,6 +1,7 @@
 const express = require('express');
-const fs = require('fs');
+const path = require('path');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const Game = require('./schema');
 
 const router = express.Router();
@@ -13,7 +14,7 @@ const authenticateUser = (req, res, next) => {
     }
 
     const token = auth.split(' ')[1];
-    const cert = fs.readFileSync('private.key');
+    const cert = fs.readFileSync(path.resolve(__dirname) + '/../../private.key');
 
     try {
         const decoded = jwt.verify(token, cert);

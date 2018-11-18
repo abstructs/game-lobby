@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
-import { Player } from '../lobby/lobby.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { PlayerService, Player } from '../services/player.service';
 
 const OPTIONS: string[] = ["Option 1", "Option 2", "Option 3"];
 
@@ -14,7 +14,8 @@ export enum PlayerDialogState {
 @Component({
   selector: 'app-player-dialog',
   templateUrl: './player-dialog.component.html',
-  styleUrls: ['./player-dialog.component.css']
+  styleUrls: ['./player-dialog.component.css'],
+  providers: [ PlayerService ]
 })
 export class PlayerDialogComponent implements OnInit {
 
@@ -55,7 +56,8 @@ export class PlayerDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<PlayerDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: [PlayerDialogState, Player],
-    public snackBar: MatSnackBar) {
+    public snackBar: MatSnackBar,
+    private playerService: PlayerService) {
       dialogRef.disableClose = true;
 
       this.mode = data[0];
@@ -95,22 +97,38 @@ export class PlayerDialogComponent implements OnInit {
   }
 
   onAddClick(): void {
-    if(this.playerForm.invalid) {
-      this.setFormTouched(this.playerForm);
-      this.snackBar.open("Please check for errors.", "CLOSE");
+    if(this.playerForm.valid) {
+      this.playerService.addOne(this.playerForm.value).subscribe((playerAdded: boolean) => {
+        if(playerAdded) {
+          this.dialogRef.close(this.playerForm.value);
+          this.snackBar.open("Successfully added player!", "OK");
+        } else {
+          this.dialogRef.close(null);
+          this.snackBar.open("Something went wrong", "CLOSE");
+        }
+      })
     } else {
-      this.dialogRef.close(this.playerForm.value);
-      this.snackBar.open("Successfully added player!", "OK");
+      this.setFormTouched(this.playerForm);
+      this.snackBar.open("Please check for errors", "CLOSE");
     }
   }
 
   onUpdateClick(): void {
-    if(this.playerForm.invalid) {
+    if(this.playerForm.valid) {
+      this.playerService.updateOne(this.playerData['_id'], this.playerForm.value)
+      .subscribe((playerAdded: boolean) => {
+        if(playerAdded) {
+          this.dialogRef.close(this.playerForm.value);
+          this.snackBar.open("Successfully updated player!", "OK");
+        } else {
+          this.dialogRef.close(null);
+          this.snackBar.open("Something went wrong", "CLOSE");
+        }
+      });
+    } else {
+
       this.setFormTouched(this.playerForm);
       this.snackBar.open("Please check for errors", "CLOSE");
-    } else {
-      this.dialogRef.close(this.playerForm.value);
-      this.snackBar.open("Successfully updated player!", "OK");
     }
   }
 

@@ -92,11 +92,11 @@ export class LoginDialogComponent implements OnInit {
           this.snackBar.open("Successfully logged on", "OK");
           this.dialogRef.close();
         } else {
-          this.snackBar.open("Incorrect password", "OK");
+          this.snackBar.open("Incorrect password", "CLOSE");
         }
       });
     } else {
-      this.snackBar.open("Please check the form for errors", "OK");
+      this.snackBar.open("Please check the form for errors", "CLOSE");
     }
 
     this.setFormTouched(this.loginForm);
