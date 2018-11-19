@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Player } from './player.service';
 import { HelperService } from './helper.service';
 import { HttpHeaders } from '@angular/common/http';
+import { Game } from '../lobby/lobby.component';
 // import { Game } from './game.service';
 
 @Injectable({
@@ -22,11 +23,33 @@ export class BackendService {
     }
   }
 
+
+  // game
+
+  findAllGames(): Observable<Object> {
+    return this.http.get(`${this.api_url}/game`);
+  }
+
+  addGame(game: Game): Observable<Object> {
+    return this.http.post(`${this.api_url}/game/add`, {
+      game
+    });
+  }
+
+  updateGame(gameId: string, game: Player): Observable<Object> {
+    return this.http.patch(`${this.api_url}/game/edit/${gameId}`, { game }, this.httpOptions);
+  }
+
+  removeGame(gameId: string) {
+    return this.http.delete(`${this.api_url}/game/delete/${gameId}`, this.httpOptions);
+  }
+
+  // player
+
   findAllPlayers(): Observable<Object> {
     return this.http.get(`${this.api_url}/player`);
   }
 
-  // player
   addPlayer(player: Player): Observable<Object> {
     return this.http.post(`${this.api_url}/player/add`, {
       player
