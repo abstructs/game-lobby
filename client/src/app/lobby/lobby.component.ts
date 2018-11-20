@@ -4,6 +4,7 @@ import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { PlayerDialogComponent, PlayerDialogState } from '../player-dialog/player-dialog.component';
 import { UserService } from '../services/user.service';
 import { Player, PlayerService } from '../services/player.service';
+import { GameService } from '../services/game.service';
 
 export interface Game {
   title: string;
@@ -35,7 +36,7 @@ const GAME_DATA: Game[] = [
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.css'],
-  providers:  [ UserService ]
+  providers:  [ UserService, GameService ]
 })
 export class LobbyComponent implements OnInit {
 
@@ -46,17 +47,27 @@ export class LobbyComponent implements OnInit {
   playerTableData: Player[];
   playerTableColumns: string[] = ["name", "rank", "score", "time", "gamePlayed", "status", "option"];
 
-  gameTableData: Game[] = GAME_DATA;
+  gameTableData: Game[];
   gameTableColumns: string[] = ["title", "platform", "genre", "publisher", "release", "status"];
 
   LobbyTab = LobbyTab;
 
   constructor(public dialog: MatDialog, public snackBar: MatSnackBar,
-    private userService: UserService, private playerService: PlayerService) { 
+    private userService: UserService, private playerService: PlayerService,
+    private gameService: GameService) { 
     this.tab = LobbyTab.PLAYERS;
     this.playerTableData = [];
+    this.gameTableData = [];
     // this.playerTableData = this.playerService.findAll().sub
     this.getPlayerData();
+  }
+
+  getGameData() {
+    this.loading = true;
+    this.gameService.findAll().subscribe((games: Game[]) => {
+      this.loading = false;
+      this.gameTableData = games;
+    });
   }
 
   getPlayerData() {
@@ -73,10 +84,12 @@ export class LobbyComponent implements OnInit {
 
   onGamesClick() {
     this.tab = LobbyTab.GAMES;
+    this.getGameData();
   }
 
   onPlayersClick() {
     this.tab = LobbyTab.PLAYERS;
+    this.getPlayerData();
   }
 
   isLoggedIn(): boolean {

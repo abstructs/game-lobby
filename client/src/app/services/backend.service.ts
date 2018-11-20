@@ -23,7 +23,6 @@ export class BackendService {
     }
   }
 
-
   // game
 
   findAllGames(): Observable<Object> {
@@ -36,7 +35,7 @@ export class BackendService {
     });
   }
 
-  updateGame(gameId: string, game: Player): Observable<Object> {
+  updateGame(gameId: string, game: Game): Observable<Object> {
     return this.http.patch(`${this.api_url}/game/edit/${gameId}`, { game }, this.httpOptions);
   }
 

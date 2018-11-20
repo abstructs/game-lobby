@@ -21,6 +21,7 @@ import { UserService } from './services/user.service';
 import { BackendService } from './services/backend.service';
 import { HelperService } from './services/helper.service';
 import { CookieService } from 'ngx-cookie-service';
+import { GameService } from './services/game.service';
 
 
 
@@ -54,6 +55,7 @@ import { CookieService } from 'ngx-cookie-service';
   providers: [
     BackendService,
     UserService,
+    GameService,
     CookieService,
     HelperService
   ],
