@@ -22,6 +22,7 @@ import { BackendService } from './services/backend.service';
 import { HelperService } from './services/helper.service';
 import { CookieService } from 'ngx-cookie-service';
 import { GameService } from './services/game.service';
+import { GameDialogComponent } from './game-dialog/game-dialog.component';
 
 
 
@@ -30,7 +31,8 @@ import { GameService } from './services/game.service';
     AppComponent,
     LobbyComponent,
     LoginDialogComponent,
-    PlayerDialogComponent
+    PlayerDialogComponent,
+    GameDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,8 @@ import { GameService } from './services/game.service';
   bootstrap: [AppComponent],
   entryComponents: [
     LoginDialogComponent,
-    PlayerDialogComponent
+    PlayerDialogComponent,
+    GameDialogComponent
   ]
 })
 export class AppModule { }

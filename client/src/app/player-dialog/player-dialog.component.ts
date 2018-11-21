@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PlayerService, Player } from '../services/player.service';
+import { Game } from '../services/game.service';
 
 const OPTIONS: string[] = ["Option 1", "Option 2", "Option 3"];
 
@@ -21,6 +22,7 @@ export class PlayerDialogComponent implements OnInit {
 
   options: string[] = OPTIONS;
   playerData: Player;
+  games: Game[];
   mode: string;
 
   playerForm: FormGroup;
@@ -55,13 +57,14 @@ export class PlayerDialogComponent implements OnInit {
   PlayerDialogState = PlayerDialogState;
 
   constructor(public dialogRef: MatDialogRef<PlayerDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: [PlayerDialogState, Player],
+    @Inject(MAT_DIALOG_DATA) public data: [PlayerDialogState, Player, Game[]],
     public snackBar: MatSnackBar,
     private playerService: PlayerService) {
       dialogRef.disableClose = true;
 
       this.mode = data[0];
       this.playerData = data[1];
+      this.games = data[2];
       
       // if(this.playerData) {
       this.playerForm = new FormGroup({
@@ -144,12 +147,12 @@ export class PlayerDialogComponent implements OnInit {
     return [1, 2, 3, 4, 5];
   }
 
-  getGames() {
-    return ["League", "CS GO", "Overwatch"];
+  getGames(): Game[] {
+    return this.games;
   }
 
   getStatuses() {
-    return ["Available", "Busy"];
+    return ["Availible", "Busy"];
   }
 
   getPlayer(): Player {

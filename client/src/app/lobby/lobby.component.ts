@@ -4,16 +4,8 @@ import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { PlayerDialogComponent, PlayerDialogState } from '../player-dialog/player-dialog.component';
 import { UserService } from '../services/user.service';
 import { Player, PlayerService } from '../services/player.service';
-import { GameService } from '../services/game.service';
-
-export interface Game {
-  title: string;
-  platform: string;
-  genre: string;
-  publisher: string;
-  release: Number;
-  status: string;
-}
+import { GameService, Game } from '../services/game.service';
+import { GameDialogComponent, GameDialogState } from '../game-dialog/game-dialog.component';
 
 export enum LobbyTab {
   PLAYERS = "PLAYERS",
@@ -58,8 +50,20 @@ export class LobbyComponent implements OnInit {
     this.tab = LobbyTab.PLAYERS;
     this.playerTableData = [];
     this.gameTableData = [];
-    // this.playerTableData = this.playerService.findAll().sub
-    this.getPlayerData();
+
+    this.getAllData();
+  }
+
+  getAllData() {
+    this.loading = true;
+    this.playerService.findAll().subscribe((players: Player[]) => {
+      this.playerTableData = players;
+
+      this.gameService.findAll().subscribe((games: Game[]) => {
+        this.loading = false;
+        this.gameTableData = games;
+      });
+    });
   }
 
   getGameData() {
@@ -118,10 +122,22 @@ export class LobbyComponent implements OnInit {
     })
   }
 
+  onAddGameClick(index: number): void {
+    const dialogRef = this.dialog.open(GameDialogComponent, {
+      width: "70%",
+      data: [GameDialogState.ADD, this.gameTableData[index]],
+      autoFocus: false
+    }).afterClosed().subscribe((game: Game) => {
+      if(game) {
+        this.getGameData();
+      }
+    });
+  }
+
   onAddPlayerClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.ADD, this.playerTableData[index]],
+      data: [PlayerDialogState.ADD, this.playerTableData[index], this.gameTableData],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
       if(player) {
@@ -145,7 +161,7 @@ export class LobbyComponent implements OnInit {
   onEditPlayerClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.EDIT, this.playerTableData[index]],
+      data: [PlayerDialogState.EDIT, this.playerTableData[index], this.gameTableData],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
       if(player) {

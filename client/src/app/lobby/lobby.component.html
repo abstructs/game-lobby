@@ -1,7 +1,8 @@
 <mat-toolbar color="primary">
     <span>Game Lobby</span>
     <span class="fill-remaining-space"></span>
-    <button mat-button (click)="onAddPlayerClick()">Add Player</button>
+    <button *ngIf="getTab() == LobbyTab.PLAYERS" mat-button (click)="onAddPlayerClick()">Add Player</button>
+    <button *ngIf="getTab() == LobbyTab.GAMES" mat-button (click)="onAddGameClick()">Add Game</button>
     <button (click)="onPlayersClick()" mat-button>Players</button>
     <button (click)="onGamesClick()" mat-button>Games</button>
     <button (click)="onLoginClick()" mat-button *ngIf="!isLoggedIn()">Login</button>

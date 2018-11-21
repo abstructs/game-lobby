@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Game } from '../lobby/lobby.component';
 import { Observable, of } from 'rxjs';
 import { BackendService } from './backend.service';
 import { map, catchError } from 'rxjs/operators';
 
+export interface Game {
+  title: string;
+  platform: string;
+  genre: string;
+  publisher: string;
+  release: Number;
+  status: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class GameService {
 
   constructor(private backend: BackendService) { }

@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { Player } from './player.service';
 import { HelperService } from './helper.service';
 import { HttpHeaders } from '@angular/common/http';
-import { Game } from '../lobby/lobby.component';
+import { Game } from './game.service';
+
 // import { Game } from './game.service';
 
 @Injectable({

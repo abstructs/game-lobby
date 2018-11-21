@@ -37,9 +37,8 @@ export class UserService {
   }
 
   usernameTaken(username: string):Observable<boolean> {
-    // console.log('username taken ran');
     return this.backend.validUsername(username).pipe(
-      map(() => true),
+      map(() => false),
       catchError(() => of(true))
     );
   }
