@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.post('/add', authenticateUser, (req, res) => {
+router.post('/add', (req, res) => {
     if(req.body.game) {
         const game = new Game(req.body.game);
         

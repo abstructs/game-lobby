@@ -139,6 +139,14 @@ export class GameDialogComponent implements OnInit {
     return [1, 2, 3, 4, 5];
   }
 
+  getPlatforms() {
+    return ["Xbox One", "PS4", "PC", "Nintendo Switch"];
+  }
+
+  getGenres() {
+    return ["RPG", "FPS", "Indie", "Sandbox", "Strategy"];
+  }
+
   // getGames(): Game[] {
   //   return this.games;
   // }

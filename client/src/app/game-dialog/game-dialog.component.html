@@ -76,8 +76,8 @@
       </mat-form-field>
   
       <mat-form-field>
-        <input formControlName="releaseDate" matInput placeholder="Release Date">
-        <mat-error *ngIf="releaseDate.invalid && (releaseDate.dirty || releaseDate.touched)">Invalid release date</mat-error>
+        <input formControlName="release" matInput placeholder="Release Date">
+        <mat-error *ngIf="release.invalid && (release.dirty || release.touched)">Invalid release date</mat-error>
       </mat-form-field>
   
       <mat-form-field>
@@ -90,9 +90,9 @@
       </mat-form-field>
   </div>
 </mat-dialog-content>
-<!-- <mat-dialog-actions>
+<mat-dialog-actions>
   <button (click)="onCloseClick()" mat-button>Cancel</button>
-  <button (click)="onJoinClick()" *ngIf="getMode() == GameDialogState.SHOW" mat-button="true">Join</button>
+  <!-- <button (click)="onJoinClick()" *ngIf="getMode() == GameDialogState.SHOW" mat-button="true">Join</button> -->
   <button (click)="onAddClick()" *ngIf="getMode() == GameDialogState.ADD" mat-button="true">Add</button>
   <button (click)="onUpdateClick()" *ngIf="getMode() == GameDialogState.EDIT" mat-button="true">Update</button>
-</mat-dialog-actions> -->
+</mat-dialog-actions>
