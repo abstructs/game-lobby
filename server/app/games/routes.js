@@ -53,12 +53,34 @@ router.post('/add', (req, res) => {
     }
 });
 
-// router.post('/edit', (req, res) => {
-//     res.send('got game edit');
-// });
+router.patch('/edit/:gameId', authenticateUser, (req, res) => {
+    const game = req.body.game;
+    const gameId = req.params.gameId;
 
-// router.delete('/delete', (req, res) => {
-//     res.send('got game delete');
-// });
+    if(game) {
+        Game.findOneAndUpdate({ _id: gameId }, game, (err, game) => {
+            if(err) {
+                console.trace(err);
+                throw err;
+            }
+            
+            res.status(200).send({ success: "Succesfully updated game." });
+        });
+    } else {
+        res.status(400).send({ errors: { player: "Expected a game." }});
+    }
+});
+
+router.delete('/delete/:id', authenticateUser, (req, res) => {
+    const gameId = req.params.id;
+    Game.findOneAndDelete({ _id: gameId }, (err, response) => {
+        if(err) {
+            console.trace(err);
+            throw err;
+        }
+
+        res.status(200).send({ success: "Successfully deleted game." });
+    });
+});
 
 module.exports = router;

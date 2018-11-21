@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>Game</h2>
 <mat-dialog-content>
   <!-- Edit Game Dialog -->
-  <!-- <div [formGroup]="gameForm" *ngIf="getMode() == GameDialogState.EDIT" class="container" id="edit_game_dialog">
+  <div [formGroup]="gameForm" *ngIf="getMode() == GameDialogState.EDIT" class="container" id="edit_game_dialog">
       <mat-form-field>
         <input formControlName="title" matInput placeholder="Title" value="{{ getGame().title }}">
-        <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Invalid game title</mat-error>
+        <mat-error *ngIf="title.invalid && (title.dirty || title.touched)">Invalid game title</mat-error>
       </mat-form-field>
       
       <mat-form-field>
@@ -31,8 +31,8 @@
       </mat-form-field>
   
       <mat-form-field>
-        <input formControlName="releaseDate" matInput placeholder="Release Date" value="{{ getGame().releaseDate }}">
-        <mat-error *ngIf="releaseDate.invalid && (releaseDate.dirty || releaseDate.touched)">Invalid release date</mat-error>
+        <input formControlName="release" matInput placeholder="Release Date" value="{{ getGame().release }}">
+        <mat-error *ngIf="release.invalid && (releasreleaseeDate.dirty || release.touched)">Invalid release date</mat-error>
       </mat-form-field>
   
       <mat-form-field>
@@ -43,7 +43,7 @@
         </mat-select>
         <mat-error *ngIf="status.invalid && (status.dirty || status.touched)">Invalid status</mat-error>
       </mat-form-field>
-  </div> -->
+  </div>
 
     <!-- Add Game Dialog -->
   <div [formGroup]="gameForm" *ngIf="getMode() == GameDialogState.ADD" class="container" id="add_game_dialog">
@@ -92,7 +92,6 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button (click)="onCloseClick()" mat-button>Cancel</button>
-  <!-- <button (click)="onJoinClick()" *ngIf="getMode() == GameDialogState.SHOW" mat-button="true">Join</button> -->
   <button (click)="onAddClick()" *ngIf="getMode() == GameDialogState.ADD" mat-button="true">Add</button>
   <button (click)="onUpdateClick()" *ngIf="getMode() == GameDialogState.EDIT" mat-button="true">Update</button>
 </mat-dialog-actions>

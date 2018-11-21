@@ -10,7 +10,6 @@ export interface Player {
   time: string;
   gamePlayed: string;
   status: string;
-  option: string;
 }
 
 @Injectable({

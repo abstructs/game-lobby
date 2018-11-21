@@ -62,8 +62,6 @@ router.post('/signup', validUsername, (req, res) => {
         
                 const token = jwt.sign({ username }, cert);
 
-                console.log(typeof(token));
-        
                 res.status(200).send({ success: "User was saved.", auth: { token } });
             });
         });

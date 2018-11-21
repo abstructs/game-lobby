@@ -62,7 +62,7 @@ export class GameDialogComponent implements OnInit {
 
       this.mode = data[0];
       this.gameData = data[1];
-      
+
       this.gameForm = new FormGroup({
         title: new FormControl(this.gameData ? this.gameData.title : '', [
           Validators.required
@@ -97,10 +97,10 @@ export class GameDialogComponent implements OnInit {
 
   onAddClick(): void {
     if(this.gameForm.valid) {
-      this.gameService.addOne(this.gameForm.value).subscribe((playerAdded: boolean) => {
-        if(playerAdded) {
+      this.gameService.addOne(this.gameForm.value).subscribe((gameAdded: boolean) => {
+        if(gameAdded) {
           this.dialogRef.close(this.gameForm.value);
-          this.snackBar.open("Successfully added player!", "OK");
+          this.snackBar.open("Successfully added game!", "OK");
         } else {
           this.dialogRef.close(null);
           this.snackBar.open("Something went wrong", "CLOSE");
@@ -114,7 +114,7 @@ export class GameDialogComponent implements OnInit {
 
   onUpdateClick(): void {
     if(this.gameForm.valid) {
-      this.gameService.updateOne(this.gameForm['_id'], this.gameForm.value)
+      this.gameService.updateOne(this.gameData['_id'], this.gameForm.value)
       .subscribe((gameAdded: boolean) => {
         if(gameAdded) {
           this.dialogRef.close(this.gameForm.value);

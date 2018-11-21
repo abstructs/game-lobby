@@ -37,10 +37,10 @@ export class LobbyComponent implements OnInit {
   tab: LobbyTab;
   loading: boolean;
   playerTableData: Player[];
-  playerTableColumns: string[] = ["name", "rank", "score", "time", "gamePlayed", "status", "option"];
+  playerTableColumns: string[] = ["name", "rank", "score", "time", "gamePlayed", "status", "options"];
 
   gameTableData: Game[];
-  gameTableColumns: string[] = ["title", "platform", "genre", "publisher", "release", "status"];
+  gameTableColumns: string[] = ["title", "platform", "genre", "publisher", "release", "status", "options"];
 
   LobbyTab = LobbyTab;
 
@@ -130,6 +130,30 @@ export class LobbyComponent implements OnInit {
     }).afterClosed().subscribe((game: Game) => {
       if(game) {
         this.getGameData();
+      }
+    });
+  }
+
+  onEditGameClick(index: number): void {
+    const dialogRef = this.dialog.open(GameDialogComponent, {
+      width: "70%",
+      data: [GameDialogState.EDIT, this.gameTableData[index]],
+      autoFocus: false
+    }).afterClosed().subscribe((game: Game) => {
+      if(game) {
+        this.getGameData();
+      }
+    });
+  }
+
+  onDeleteGameClick(index: number): void {
+    const game = this.gameTableData[index];
+    this.gameService.removeOne(game['_id']).subscribe(removed => {
+      if(removed) {
+        this.snackBar.open("Succesfully deleted game", "OK");
+        this.getGameData();
+      } else {
+        this.snackBar.open("Something went wrong", "CLOSE");
       }
     });
   }

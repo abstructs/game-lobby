@@ -9,7 +9,7 @@ export class HelperService {
   constructor(private cookieService: CookieService) { }
 
   setToken(token: string) {
-    this.cookieService.set('token', `Bearer ${token}`);
+    this.cookieService.set('token', token);
   }
 
   revokeToken() {

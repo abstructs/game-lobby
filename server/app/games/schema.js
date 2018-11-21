@@ -12,6 +12,10 @@ const gameSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    platform: {
+        type: String,
+        required: true
+    },
     genre: {
         type: String,
         required: true

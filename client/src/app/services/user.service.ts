@@ -26,6 +26,7 @@ export class UserService {
     return this.backend.authenticate(username, password).pipe(
       map(res => {
         const { token } = res['auth'];
+
         this.helperService.setToken(token);
         return true;
       }),
