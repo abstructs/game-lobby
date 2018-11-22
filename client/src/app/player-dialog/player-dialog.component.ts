@@ -65,8 +65,9 @@ export class PlayerDialogComponent implements OnInit {
       this.mode = data[0];
       this.playerData = data[1];
       this.games = data[2];
-      
-      // if(this.playerData) {
+
+      console.log(this.games);
+
       this.playerForm = new FormGroup({
         name: new FormControl(this.playerData ? this.playerData.name : '', [
           Validators.required
@@ -136,6 +137,20 @@ export class PlayerDialogComponent implements OnInit {
   }
 
   onJoinClick(): void {
+    if(this.playerForm.controls.gamePlayed.valid) {
+      const playerId = this.playerData['_id'];
+      const gameId = this.playerForm.controls.gamePlayed.value['_id']
+
+      this.playerService.joinGame(playerId, gameId).subscribe(joinedGame => {
+        if(joinedGame) {
+          this.dialogRef.close(true);
+          this.snackBar.open("Successfully joined game!", "OK");
+        } else {
+          this.dialogRef.close(false);
+          this.snackBar.open("Something went wrong", "CLOSE");
+        }
+      })
+    }
     console.log(this.playerForm.value);
   }
   

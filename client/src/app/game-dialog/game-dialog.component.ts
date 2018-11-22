@@ -152,7 +152,7 @@ export class GameDialogComponent implements OnInit {
   // }
 
   getStatuses() {
-    return ["Availible", "Busy"];
+    return ["Active", "Inactive"];
   }
 
   getGame(): Game {

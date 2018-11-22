@@ -6,6 +6,7 @@ import { UserService } from '../services/user.service';
 import { Player, PlayerService } from '../services/player.service';
 import { GameService, Game } from '../services/game.service';
 import { GameDialogComponent, GameDialogState } from '../game-dialog/game-dialog.component';
+import { forkJoin, Observable } from 'rxjs';
 
 export enum LobbyTab {
   PLAYERS = "PLAYERS",
@@ -51,35 +52,31 @@ export class LobbyComponent implements OnInit {
     this.playerTableData = [];
     this.gameTableData = [];
 
-    this.getAllData();
+    this.getTableData();
   }
 
-  getAllData() {
+  getTableData() {
     this.loading = true;
-    this.playerService.findAll().subscribe((players: Player[]) => {
-      this.playerTableData = players;
 
-      this.gameService.findAll().subscribe((games: Game[]) => {
-        this.loading = false;
-        this.gameTableData = games;
-      });
-    });
-  }
-
-  getGameData() {
-    this.loading = true;
-    this.gameService.findAll().subscribe((games: Game[]) => {
+    forkJoin(this.getPlayerData(), this.getGameData()).subscribe(_ => {
       this.loading = false;
-      this.gameTableData = games;
     });
   }
 
-  getPlayerData() {
-    this.loading = true;
-    this.playerService.findAll().subscribe((players: Player[]) => {
-      this.loading = false;
-      this.playerTableData = players;
-    });
+  getGameData(): Observable<Game[]> {
+    const getGamesObserver = this.gameService.findAll();
+
+    getGamesObserver.subscribe((games: Game[]) => this.gameTableData = games);
+
+    return getGamesObserver;
+  }
+
+  getPlayerData(): Observable<Player[]> {
+    const getPlayersObserver = this.playerService.findAll();
+
+    getPlayersObserver.subscribe((players: Player[]) => this.playerTableData = players);    
+
+    return getPlayersObserver;
   }
 
   getTab() {
@@ -88,7 +85,6 @@ export class LobbyComponent implements OnInit {
 
   onGamesClick() {
     this.tab = LobbyTab.GAMES;
-    this.getGameData();
   }
 
   onPlayersClick() {
@@ -114,12 +110,14 @@ export class LobbyComponent implements OnInit {
     });
   }
 
-  onJoinLobbyClick(index: number): void {
+  onJoinGameClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.SHOW, this.playerTableData[index]],
+      data: [PlayerDialogState.SHOW, this.playerTableData[index], this.gameTableData],
       autoFocus: false
-    })
+    }).afterClosed().subscribe(joinedGame => {
+      if(joinedGame) this.getPlayerData();
+    });
   }
 
   onAddGameClick(index: number): void {
@@ -128,9 +126,7 @@ export class LobbyComponent implements OnInit {
       data: [GameDialogState.ADD, this.gameTableData[index]],
       autoFocus: false
     }).afterClosed().subscribe((game: Game) => {
-      if(game) {
-        this.getGameData();
-      }
+      if(game) this.getGameData();
     });
   }
 
@@ -140,9 +136,7 @@ export class LobbyComponent implements OnInit {
       data: [GameDialogState.EDIT, this.gameTableData[index]],
       autoFocus: false
     }).afterClosed().subscribe((game: Game) => {
-      if(game) {
-        this.getGameData();
-      }
+      if(game) this.getGameData();
     });
   }
 
@@ -164,9 +158,7 @@ export class LobbyComponent implements OnInit {
       data: [PlayerDialogState.ADD, this.playerTableData[index], this.gameTableData],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
-      if(player) {
-        this.getPlayerData();
-      }
+      if(player) this.getPlayerData();
     });
   }
 
@@ -188,9 +180,7 @@ export class LobbyComponent implements OnInit {
       data: [PlayerDialogState.EDIT, this.playerTableData[index], this.gameTableData],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
-      if(player) {
-        this.getPlayerData();
-      }
+      if(player) this.getTableData();      
     });
   }
 

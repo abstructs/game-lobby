@@ -1,5 +1,6 @@
 const express = require('express');
 const Player = require('./schema');
+const Game = require('../games/schema');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
@@ -35,6 +36,33 @@ router.get('/', (req, res) => {
         res.status(200).send({ players });
     });
 });
+
+router.post('/join-game', (req, res) => {
+    const { gameId, playerId } = req.body;
+    
+    const insertPlayerPromise = Player.findOneAndUpdate({ _id: playerId }, { status: "Busy" }, (err, player) => {
+        if(err) {
+            console.trace(err);
+            throw err;
+        }
+    });
+
+    const insertGamePromise = Game.findOneAndUpdate({ _id: gameId }, { status: "Unavailible" }, (err, game) => {
+        if(err) {
+            console.trace(err);
+            throw err;
+        }
+    });
+
+    Promise.all([insertPlayerPromise, insertGamePromise]).then(_ => {
+        res.status(200).send({ success: "Successfully joined game." });
+    }).catch(err => {
+        if(err) {
+            console.trace(err);
+            throw err;
+        }
+    });
+})
 
 router.post('/add', (req, res) => {
     if(req.body.player) {

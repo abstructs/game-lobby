@@ -42,7 +42,7 @@
   <ng-container matColumnDef="options">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element; let i = index;">
-      <button (click)="onJoinLobbyClick(i)" mat-button *ngIf="element.status == 'Availible' && !isLoggedIn()">Join Game</button>
+      <button (click)="onJoinGameClick(i)" mat-button *ngIf="element.status == 'Availible' && !isLoggedIn()">Join Game</button>
 
       <button (click)="onEditPlayerClick(i)" mat-button *ngIf="isLoggedIn()">Update</button>
       <button (click)="onDeletePlayerClick(i)" mat-button *ngIf="isLoggedIn()">Delete</button>

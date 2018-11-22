@@ -28,6 +28,15 @@ export class PlayerService {
     )
   }
 
+  joinGame(playerId: string, gameId: string): Observable<boolean> {
+    return this.backend.joinGame(playerId, gameId).pipe(
+      map(res => {
+        return true;
+      }),
+      catchError(() => of(false))
+    )
+  }
+
   removeOne(playerId: string) {
     return this.backend.removePlayer(playerId).pipe(
       map(() => true),

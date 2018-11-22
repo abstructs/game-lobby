@@ -50,6 +50,10 @@ export class BackendService {
     return this.http.get(`${this.api_url}/player`);
   }
 
+  joinGame(playerId: string, gameId: string): Observable<Object> {
+    return this.http.post(`${this.api_url}/player/join-game`, { gameId, playerId }, this.httpOptions);
+  }
+
   addPlayer(player: Player): Observable<Object> {
     return this.http.post(`${this.api_url}/player/add`, {
       player
