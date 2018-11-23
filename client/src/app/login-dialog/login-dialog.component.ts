@@ -21,7 +21,7 @@ export class UniqueUsernameValidator implements AsyncValidator {
 @Component({
   selector: 'app-login-dialog',
   templateUrl: './login-dialog.component.html',
-  styleUrls: ['./login-dialog.component.css'],
+  styleUrls: ['./login-dialog.component.scss'],
   providers:  [ UserService ]
 })
 export class LoginDialogComponent implements OnInit {
@@ -68,17 +68,6 @@ export class LoginDialogComponent implements OnInit {
         this.setFormTouched(control);
       }
     });
-  }
-
-  postData(url, data) {
-      return fetch(url, {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json; charset=utf-8",
-          },
-          body: JSON.stringify(data)
-      });
-      // .then(response => response.json());
   }
 
   onNoClick(): void {

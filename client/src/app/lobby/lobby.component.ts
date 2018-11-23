@@ -13,12 +13,6 @@ export enum LobbyTab {
   GAMES = "GAMES"
 }
 
-// const LOBBY_DATA: Player[] = [
-//   { name: "faker", rank: 1, score: 100000, time: "5h", gamePlayed: "League", status: "Busy", option: "" },
-//   { name: "shroud", rank: 2, score: 333, time: "10h", gamePlayed: "CS GO", status: "Available", option: "Join Game" },
-//   { name: "oddone", rank: 3, score: 7777, time: "3d", gamePlayed: "Overwatch", status: "Available", option: "Join Game" }
-// ];
-
 const GAME_DATA: Game[] = [
   { title: "Diablo 3", platform: "PC", genre: "RPG", publisher: "Blizzard", release: 2015, status: "Active" },
   { title: "Call Of Duty", platform: "Xbox", genre: "FPS", publisher: "Activision", release: 2013, status: "Active" },
@@ -28,7 +22,7 @@ const GAME_DATA: Game[] = [
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
-  styleUrls: ['./lobby.component.css'],
+  styleUrls: ['./lobby.component.scss'],
   providers:  [ UserService, GameService ]
 })
 export class LobbyComponent implements OnInit {

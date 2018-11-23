@@ -9,7 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule, MatTableModule, 
   MatToolbarModule, MatDialogModule, MatFormFieldModule, MatInputModule, 
   MatListModule, MatDividerModule, MatSelectModule, MatSnackBarModule,
-  MatProgressBarModule } from '@angular/material';
+  MatProgressBarModule, MatTabsModule } from '@angular/material';
 
 import { LobbyComponent } from './lobby/lobby.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
@@ -23,8 +23,6 @@ import { HelperService } from './services/helper.service';
 import { CookieService } from 'ngx-cookie-service';
 import { GameService } from './services/game.service';
 import { GameDialogComponent } from './game-dialog/game-dialog.component';
-
-
 
 @NgModule({
   declarations: [
@@ -52,7 +50,8 @@ import { GameDialogComponent } from './game-dialog/game-dialog.component';
     MatDividerModule,
     MatSelectModule,
     MatSnackBarModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTabsModule
   ],
   providers: [
     BackendService,

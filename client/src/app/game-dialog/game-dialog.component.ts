@@ -3,8 +3,6 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Game, GameService } from '../services/game.service';
 
-// const OPTIONS: string[] = ["Option 1", "Option 2", "Option 3"];
-
 export enum GameDialogState {
   ADD = "ADD",
   EDIT = "EDIT"
@@ -13,14 +11,12 @@ export enum GameDialogState {
 @Component({
   selector: 'app-game-dialog',
   templateUrl: './game-dialog.component.html',
-  styleUrls: ['./game-dialog.component.css'],
+  styleUrls: ['./game-dialog.component.scss'],
   providers: [ GameService ]
 })
 export class GameDialogComponent implements OnInit {
 
-  // options: string[] = OPTIONS;
   gameData: Game;
-  // games: Game[];
   mode: string;
 
   gameForm: FormGroup;
@@ -125,7 +121,6 @@ export class GameDialogComponent implements OnInit {
         }
       });
     } else {
-
       this.setFormTouched(this.gameForm);
       this.snackBar.open("Please check for errors", "CLOSE");
     }
@@ -147,10 +142,6 @@ export class GameDialogComponent implements OnInit {
     return ["RPG", "FPS", "Indie", "Sandbox", "Strategy"];
   }
 
-  // getGames(): Game[] {
-  //   return this.games;
-  // }
-
   getStatuses() {
     return ["Active", "Inactive"];
   }
@@ -158,10 +149,6 @@ export class GameDialogComponent implements OnInit {
   getGame(): Game {
     return this.gameData;
   }
-
-  // getPlayer(): Player {
-  //   return this.playerData;
-  // }
 
   onCloseClick(): void {
     this.dialogRef.close();

@@ -4,8 +4,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PlayerService, Player } from '../services/player.service';
 import { Game } from '../services/game.service';
 
-const OPTIONS: string[] = ["Option 1", "Option 2", "Option 3"];
-
 export enum PlayerDialogState {
   ADD = "ADD",
   EDIT = "EDIT",
@@ -15,12 +13,10 @@ export enum PlayerDialogState {
 @Component({
   selector: 'app-player-dialog',
   templateUrl: './player-dialog.component.html',
-  styleUrls: ['./player-dialog.component.css'],
+  styleUrls: ['./player-dialog.component.scss'],
   providers: [ PlayerService ]
 })
 export class PlayerDialogComponent implements OnInit {
-
-  options: string[] = OPTIONS;
   playerData: Player;
   games: Game[];
   mode: string;

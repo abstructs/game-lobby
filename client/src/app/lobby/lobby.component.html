@@ -1,101 +1,113 @@
 <mat-toolbar color="primary">
     <span>Game Lobby</span>
     <span class="fill-remaining-space"></span>
-    <button *ngIf="getTab() == LobbyTab.PLAYERS" mat-button (click)="onAddPlayerClick()">Add Player</button>
-    <button *ngIf="getTab() == LobbyTab.GAMES" mat-button (click)="onAddGameClick()">Add Game</button>
-    <button (click)="onPlayersClick()" mat-button>Players</button>
-    <button (click)="onGamesClick()" mat-button>Games</button>
+    <!-- <button *ngIf="getTab() == LobbyTab.PLAYERS" mat-button (click)="onAddPlayerClick()">Add Player</button>
+    <button *ngIf="getTab() == LobbyTab.GAMES" mat-button (click)="onAddGameClick()">Add Game</button> -->
+    <!-- <button (click)="onPlayersClick()" mat-button>Players</button> -->
+    <!-- <button (click)="onGamesClick()" mat-button>Games</button> -->
     <button (click)="onLoginClick()" mat-button *ngIf="!isLoggedIn()">Login</button>
     <button (click)="onLogoutClick()" mat-button *ngIf="isLoggedIn()">Logout</button>
 </mat-toolbar>
-<table *ngIf="getTab() == LobbyTab.PLAYERS" mat-table [dataSource]="playerTableData" class="mat-elevation-z8">
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef> Player </th>
-    <td mat-cell *matCellDef="let element;"> {{ element.name }} </td>
-  </ng-container>
+<mat-tab-group>
 
-  <ng-container matColumnDef="rank">
-    <th mat-header-cell *matHeaderCellDef> Rank </th>
-    <td mat-cell *matCellDef="let element;"> {{ element.rank }} </td>
-  </ng-container>
+    <mat-tab label="Players"> 
 
-  <ng-container matColumnDef="score">
-    <th mat-header-cell *matHeaderCellDef> Score </th>
-    <td mat-cell *matCellDef="let element;"> {{ element.score }} </td>
-  </ng-container>
+      <table mat-table [dataSource]="playerTableData">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Player </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.name }} </td>
+        </ng-container>
 
-  <ng-container matColumnDef="time">
-  <th mat-header-cell *matHeaderCellDef> Time </th>
-  <td mat-cell *matCellDef="let element;"> {{ element.time }} </td>
-  </ng-container>
+        <ng-container matColumnDef="rank">
+          <th mat-header-cell *matHeaderCellDef> Rank </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.rank }} </td>
+        </ng-container>
 
-  <ng-container matColumnDef="gamePlayed">
-    <th mat-header-cell *matHeaderCellDef> Game Played </th>
-    <td mat-cell *matCellDef="let element;"> {{ element.gamePlayed }} </td>
-  </ng-container>
+        <ng-container matColumnDef="score">
+          <th mat-header-cell *matHeaderCellDef> Score </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.score }} </td>
+        </ng-container>
 
-  <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef> Status </th>
-    <td mat-cell *matCellDef="let element;"> {{ element.status }} </td>
-  </ng-container>
+        <ng-container matColumnDef="time">
+        <th mat-header-cell *matHeaderCellDef> Time </th>
+        <td mat-cell *matCellDef="let element;"> {{ element.time }} </td>
+        </ng-container>
 
-  <ng-container matColumnDef="options">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element; let i = index;">
-      <button (click)="onJoinGameClick(i)" mat-button *ngIf="element.status == 'Availible' && !isLoggedIn()">Join Game</button>
+        <ng-container matColumnDef="gamePlayed">
+          <th mat-header-cell *matHeaderCellDef> Game Played </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.gamePlayed }} </td>
+        </ng-container>
 
-      <button (click)="onEditPlayerClick(i)" mat-button *ngIf="isLoggedIn()">Update</button>
-      <button (click)="onDeletePlayerClick(i)" mat-button *ngIf="isLoggedIn()">Delete</button>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.status }} </td>
+        </ng-container>
 
-    </td>
+        <ng-container matColumnDef="options">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element; let i = index;">
+            <button (click)="onJoinGameClick(i)" mat-button *ngIf="element.status == 'Availible' && !isLoggedIn()">Join Game</button>
 
-  </ng-container>
+            <button (click)="onEditPlayerClick(i)" mat-button *ngIf="isLoggedIn()">Update</button>
+            <button (click)="onDeletePlayerClick(i)" mat-button *ngIf="isLoggedIn()">Delete</button>
 
-  <tr mat-header-row *matHeaderRowDef="playerTableColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: playerTableColumns;"></tr>
-</table>
+          </td>
 
-<table *ngIf="getTab() == LobbyTab.GAMES" mat-table [dataSource]="gameTableData" class="mat-elevation-z8">
-    <ng-container matColumnDef="title">
-      <th mat-header-cell *matHeaderCellDef> Title </th>
-      <td mat-cell *matCellDef="let element;"> {{ element.title }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="platform">
-      <th mat-header-cell *matHeaderCellDef> Platform </th>
-      <td mat-cell *matCellDef="let element;"> {{ element.platform }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="genre">
-      <th mat-header-cell *matHeaderCellDef> Genre </th>
-      <td mat-cell *matCellDef="let element;"> {{ element.genre }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="publisher">
-    <th mat-header-cell *matHeaderCellDef> Publisher </th>
-    <td mat-cell *matCellDef="let element;"> {{ element.publisher }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="release">
-      <th mat-header-cell *matHeaderCellDef> Release </th>
-      <td mat-cell *matCellDef="let element;"> {{ element.release }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef> Status </th>
-      <td mat-cell *matCellDef="let element;"> {{ element.status }} </td>
-    </ng-container>
-  
-    <tr mat-header-row *matHeaderRowDef="gameTableColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: gameTableColumns;"></tr>
-  
-    <ng-container matColumnDef="options">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element; let i = index;">
-            <button (click)="onEditGameClick(i)" mat-button *ngIf="isLoggedIn()">Update</button>
-            <button (click)="onDeleteGameClick(i)" mat-button *ngIf="isLoggedIn()">Delete</button>
-        </td>
-    </ng-container>
-</table>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="playerTableColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: playerTableColumns;"></tr>
+      </table>
+
+    </mat-tab>
+
+    <mat-tab label="Games">
+
+    <table mat-table [dataSource]="gameTableData">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef> Title </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.title }} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="platform">
+          <th mat-header-cell *matHeaderCellDef> Platform </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.platform }} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="genre">
+          <th mat-header-cell *matHeaderCellDef> Genre </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.genre }} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="publisher">
+        <th mat-header-cell *matHeaderCellDef> Publisher </th>
+        <td mat-cell *matCellDef="let element;"> {{ element.publisher }} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="release">
+          <th mat-header-cell *matHeaderCellDef> Release </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.release }} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let element;"> {{ element.status }} </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="gameTableColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: gameTableColumns;"></tr>
+      
+        <ng-container matColumnDef="options">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let i = index;">
+                <button (click)="onEditGameClick(i)" mat-button *ngIf="isLoggedIn()">Update</button>
+                <button (click)="onDeleteGameClick(i)" mat-button *ngIf="isLoggedIn()">Delete</button>
+            </td>
+        </ng-container>
+    </table>
+
+  </mat-tab>
+
+</mat-tab-group>
 <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 <router-outlet></router-outlet>
