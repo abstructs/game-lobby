@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTable, MatSnackBar } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTable, MatSnackBar, MatTabChangeEvent } from '@angular/material';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { PlayerDialogComponent, PlayerDialogState } from '../player-dialog/player-dialog.component';
 import { UserService } from '../services/user.service';
@@ -9,8 +9,8 @@ import { GameDialogComponent, GameDialogState } from '../game-dialog/game-dialog
 import { forkJoin, Observable } from 'rxjs';
 
 export enum LobbyTab {
-  PLAYERS = "PLAYERS",
-  GAMES = "GAMES"
+  PLAYERS = 0,
+  GAMES = 1
 }
 
 const GAME_DATA: Game[] = [
@@ -77,13 +77,8 @@ export class LobbyComponent implements OnInit {
     return this.tab;
   }
 
-  onGamesClick() {
-    this.tab = LobbyTab.GAMES;
-  }
-
-  onPlayersClick() {
-    this.tab = LobbyTab.PLAYERS;
-    this.getPlayerData();
+  onTabChange(event: MatTabChangeEvent) {
+    this.tab = event.index;
   }
 
   isLoggedIn(): boolean {
