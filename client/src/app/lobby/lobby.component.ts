@@ -105,7 +105,7 @@ export class LobbyComponent implements OnInit {
       data: [PlayerDialogState.SHOW, this.playerTableData[index], this.gameTableData],
       autoFocus: false
     }).afterClosed().subscribe(joinedGame => {
-      if(joinedGame) this.getPlayerData();
+      if(joinedGame) this.getTableData();
     });
   }
 
