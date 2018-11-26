@@ -43,3 +43,7 @@ $apptheme: mat-dark-theme($app-primary, $app-accent, $app-warn);
 .mat-ink-bar {
     background-color: mat-color($app-accent) !important;
 }
+
+.width-65 {
+    min-width: 65vw !important;
+}

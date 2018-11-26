@@ -9,7 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule, MatTableModule, 
   MatToolbarModule, MatDialogModule, MatFormFieldModule, MatInputModule, 
   MatListModule, MatDividerModule, MatSelectModule, MatSnackBarModule,
-  MatProgressBarModule, MatTabsModule } from '@angular/material';
+  MatProgressBarModule, MatTabsModule, MatIconModule, MatBottomSheetModule } from '@angular/material';
 
 import { LobbyComponent } from './lobby/lobby.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
@@ -23,6 +23,7 @@ import { HelperService } from './services/helper.service';
 import { CookieService } from 'ngx-cookie-service';
 import { GameService } from './services/game.service';
 import { GameDialogComponent } from './game-dialog/game-dialog.component';
+import { SearchBottomSheetComponent } from './search-bottom-sheet/search-bottom-sheet.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { GameDialogComponent } from './game-dialog/game-dialog.component';
     LobbyComponent,
     LoginDialogComponent,
     PlayerDialogComponent,
-    GameDialogComponent
+    GameDialogComponent,
+    SearchBottomSheetComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +53,9 @@ import { GameDialogComponent } from './game-dialog/game-dialog.component';
     MatSelectModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatTabsModule
+    MatTabsModule,
+    MatIconModule,
+    MatBottomSheetModule
   ],
   providers: [
     BackendService,
@@ -64,7 +68,8 @@ import { GameDialogComponent } from './game-dialog/game-dialog.component';
   entryComponents: [
     LoginDialogComponent,
     PlayerDialogComponent,
-    GameDialogComponent
+    GameDialogComponent,
+    SearchBottomSheetComponent
   ]
 })
 export class AppModule { }

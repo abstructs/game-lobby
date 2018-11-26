@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTable, MatSnackBar, MatTabChangeEvent } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTable, MatSnackBar, MatTabChangeEvent, MatBottomSheet } from '@angular/material';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { PlayerDialogComponent, PlayerDialogState } from '../player-dialog/player-dialog.component';
 import { UserService } from '../services/user.service';
@@ -7,6 +7,7 @@ import { Player, PlayerService } from '../services/player.service';
 import { GameService, Game } from '../services/game.service';
 import { GameDialogComponent, GameDialogState } from '../game-dialog/game-dialog.component';
 import { forkJoin, Observable } from 'rxjs';
+import { SearchBottomSheetComponent } from '../search-bottom-sheet/search-bottom-sheet.component';
 
 export enum LobbyTab {
   PLAYERS = 0,
@@ -41,7 +42,8 @@ export class LobbyComponent implements OnInit {
 
   constructor(public dialog: MatDialog, public snackBar: MatSnackBar,
     private userService: UserService, private playerService: PlayerService,
-    private gameService: GameService) { 
+    private gameService: GameService,
+    private bottomSheet: MatBottomSheet) { 
     this.tab = LobbyTab.PLAYERS;
     this.playerTableData = [];
     this.gameTableData = [];
@@ -170,6 +172,12 @@ export class LobbyComponent implements OnInit {
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
       if(player) this.getTableData();      
+    });
+  }
+
+  onSearchClick() {
+    this.bottomSheet.open(SearchBottomSheetComponent, {
+      panelClass: 'width-65'
     });
   }
 
