@@ -27,7 +27,7 @@ const authenticateUser = (req, res, next) => {
 }
 
 router.get('/', (req, res) => {
-    Player.find().exec((err, players) => {
+    Player.find({}, (err, players) => {
         if(err) {
             console.trace(err);
             throw err;
@@ -35,6 +35,19 @@ router.get('/', (req, res) => {
 
         res.status(200).send({ players });
     });
+});
+
+router.get('/search/:name', (req, res) => {
+    const name = req.params.name;
+
+    Player.find({ name }, (err, players) => {
+        if(err) {
+            console.trace(err);
+            throw err;
+        }
+
+        res.status(200).send({ players });
+    })
 });
 
 router.post('/join-game', (req, res) => {
