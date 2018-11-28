@@ -2,8 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatBottomSheetRef, MatSnackBar, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Player, PlayerService } from '../services/player.service';
-import { GameService } from '../services/game.service';
-import { LobbyTab } from '../lobby/lobby.component';
+import { GameService, Game } from '../services/game.service';
+import { LobbyTab } from '../services/helper.service';
 
 @Component({
   selector: 'app-search-bottom-sheet',
@@ -26,12 +26,18 @@ export class SearchBottomSheetComponent {
 
   LobbyTab = LobbyTab;
 
-  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: [LobbyTab], 
+  setSearchData: (searchField: string, searchQuery: string) => void;
+  refreshTable: (refreshAll: boolean) => void;
+
+  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: [LobbyTab, 
+        (searchField: string, searchQuery: string) => void, (refreshAll: boolean) => void],
       private bottomSheetRef: MatBottomSheetRef<SearchBottomSheetComponent>, 
       public snackBar: MatSnackBar, private playerService: PlayerService,
       private gameService: GameService) { 
 
     this.tab = data[0];
+    this.setSearchData = this.data[1];
+    this.refreshTable = this.data[2];
 
     this.searchForm = new FormGroup({
       field: new FormControl( 
@@ -51,19 +57,23 @@ export class SearchBottomSheetComponent {
   }
 
   getFirstPlayerField() {
-    return "Name";
+    return this.getPlayerFields()[0];
   }
 
-  getPlayerFields() {
+  private getPlayerFields() {
     return ["Name", "Rank", "Score", "Time", "Game Played", "Status"];
   }
 
   getFirstGameField() {
-    return "Title";
+    return this.getGameFields()[0];
   }
 
-  getGameFields() {
+  private getGameFields() {
     return ["Title", "Platform", "Genre", "Publisher", "Release", "Status"];
+  }
+
+  getFields() {
+    return this.getTab() == LobbyTab.PLAYERS ? this.getPlayerFields() : this.getGameFields();
   }
 
   setFormTouched(formGroup: FormGroup): void {
@@ -75,8 +85,8 @@ export class SearchBottomSheetComponent {
       }
     });
   }
-  
-  onSearchKeyPress() {
+
+  onSearchKeyUp() {
     if(this.searchForm.valid) {
       let field = this.field.value.toLowerCase();
       const query = this.query.value.toLowerCase();
@@ -85,12 +95,27 @@ export class SearchBottomSheetComponent {
         field = "gamePlayed";
       }
 
-      this.playerService.findByField(field, query).subscribe((players: Player[]) => {
-        console.log(players);
-      })
+      this.setSearchData(field, query);
+      this.refreshTable(false);
+
+      // this.playerService.findByField(field, query).subscribe((players: Player[]) => {
+      //   this.playerSearchCallback(players);
+      // })
     } else {
       this.setFormTouched(this.searchForm);
-      // this.snackBar.open("Please check for errors", "CLOSE");
     }
   }
+    
+  // onGameSearchKeyUp() {
+  //   if(this.searchForm.valid) {
+  //     const field = this.field.value.toLowerCase();
+  //     const query = this.query.value.toLowerCase();
+
+  //     this.gameService.findByField(field, query).subscribe((games: Game[]) => {
+  //       console.log(games);
+  //     })
+  //   } else {
+  //     this.setFormTouched(this.searchForm);
+  //   }
+  // }
 }

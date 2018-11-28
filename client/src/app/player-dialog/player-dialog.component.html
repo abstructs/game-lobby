@@ -40,12 +40,12 @@
   <!-- Edit Player Dialog -->
   <div [formGroup]="playerForm" *ngIf="getMode() == PlayerDialogState.EDIT" class="container" id="edit_player_dialog">
       <mat-form-field>
-        <input formControlName="name" matInput placeholder="Player" value="{{ getPlayer().name }}">
+        <input formControlName="name" matInput placeholder="Player">
         <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Invalid player name</mat-error>
       </mat-form-field>
       
       <mat-form-field>
-        <mat-select formControlName="rank" [(value)]="getPlayer().rank" placeholder="Select A Rating">
+        <mat-select formControlName="rank" placeholder="Select A Rating">
           <mat-option *ngFor="let rank of getRanks()" [value]="rank">
             {{ rank }}
           </mat-option>
@@ -54,17 +54,17 @@
       </mat-form-field>
   
       <mat-form-field>
-        <input formControlName="score" matInput placeholder="Score" value="{{ getPlayer().score }}">
+        <input formControlName="score" matInput placeholder="Score">
         <mat-error *ngIf="score.invalid && (score.dirty || score.touched)">Invalid score</mat-error>
       </mat-form-field>
   
       <mat-form-field>
-        <input formControlName="time" matInput placeholder="Time" value="{{ getPlayer().time }}">
+        <input formControlName="time" matInput placeholder="Time">
         <mat-error *ngIf="time.invalid && (time.dirty || time.touched)">Invalid time</mat-error>
       </mat-form-field>
   
       <mat-form-field>
-        <mat-select formControlName="gamePlayed" [(value)]="getPlayer().gamePlayed" placeholder="Select A Game">
+        <mat-select formControlName="gamePlayed" placeholder="Select A Game">
           <mat-option *ngFor="let game of getGames()" [value]="game.title">
             {{ game.title }}
           </mat-option>
@@ -73,7 +73,7 @@
       </mat-form-field>
   
       <mat-form-field>
-        <mat-select formControlName="status" [(value)]="getPlayer().status" placeholder="Select A Status">
+        <mat-select formControlName="status" placeholder="Select A Status">
           <mat-option *ngFor="let status of getStatuses()" [value]="status">
             {{ status }}
           </mat-option>

@@ -3,12 +3,12 @@
   <!-- Edit Game Dialog -->
   <div [formGroup]="gameForm" *ngIf="getMode() == GameDialogState.EDIT" class="container" id="edit_game_dialog">
       <mat-form-field>
-        <input formControlName="title" matInput placeholder="Title" value="{{ getGame().title }}">
+        <input formControlName="title" matInput placeholder="Title">
         <mat-error *ngIf="title.invalid && (title.dirty || title.touched)">Invalid game title</mat-error>
       </mat-form-field>
       
       <mat-form-field>
-        <mat-select formControlName="platform" [(value)]="getGame().platform" placeholder="Select A Platform">
+        <mat-select formControlName="platform" placeholder="Select A Platform">
           <mat-option *ngFor="let platform of getPlatforms()" [value]="platform">
             {{ platform }}
           </mat-option>
@@ -17,7 +17,7 @@
       </mat-form-field>
   
       <mat-form-field>
-        <mat-select formControlName="genre" [(value)]="getGame().genre" placeholder="Select A genre">
+        <mat-select formControlName="genre" placeholder="Select A genre">
           <mat-option *ngFor="let genre of getGenres()" [value]="genre">
             {{ genre }}
           </mat-option>
@@ -26,17 +26,17 @@
       </mat-form-field>
 
       <mat-form-field>
-        <input formControlName="publisher" matInput placeholder="Publisher" value="{{ getGame().publisher }}">
+        <input formControlName="publisher" matInput placeholder="Publisher">
         <mat-error *ngIf="publisher.invalid && (publisher.dirty || publisher.touched)">Invalid publisher</mat-error>
       </mat-form-field>
   
       <mat-form-field>
-        <input formControlName="release" matInput placeholder="Release Date" value="{{ getGame().release }}">
+        <input formControlName="release" matInput placeholder="Release Date">
         <mat-error *ngIf="release.invalid && (releasreleaseeDate.dirty || release.touched)">Invalid release date</mat-error>
       </mat-form-field>
   
       <mat-form-field>
-        <mat-select formControlName="status" [(value)]="getGame().status" placeholder="Select A Status">
+        <mat-select formControlName="status" placeholder="Select A Status">
           <mat-option *ngFor="let status of getStatuses()" [value]="status">
             {{ status }}
           </mat-option>
@@ -62,7 +62,7 @@
       </mat-form-field>
   
       <mat-form-field>
-        <mat-select formControlName="genre" placeholder="Select A genre">
+        <mat-select formControlName="genre" placeholder="Select A Genre">
           <mat-option *ngFor="let genre of getGenres()" [value]="genre">
             {{ genre }}
           </mat-option>

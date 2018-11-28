@@ -153,7 +153,7 @@ export class PlayerDialogComponent implements OnInit {
   }
 
   getRanks() {
-    return [1, 2, 3, 4, 5];
+    return ["1", "2", "3", "4", "5"];
   }
 
   getGames(): Game[] {

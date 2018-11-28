@@ -39,7 +39,7 @@ router.get('/', (req, res) => {
 router.get('/search/:field/:value', (req, res) => {
     const { field, value } = req.params;
 
-    const searchLikeRegex = new RegExp(`^${value}`);
+    const searchLikeRegex = new RegExp(`^${value}`, 'i');
 
     Game.find({ [field]: searchLikeRegex }, (err, games) => {
         if(err) {

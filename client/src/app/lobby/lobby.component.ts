@@ -8,11 +8,10 @@ import { GameService, Game } from '../services/game.service';
 import { GameDialogComponent, GameDialogState } from '../game-dialog/game-dialog.component';
 import { forkJoin, Observable } from 'rxjs';
 import { SearchBottomSheetComponent } from '../search-bottom-sheet/search-bottom-sheet.component';
+import { LobbyTab } from '../services/helper.service';
 
-export enum LobbyTab {
-  PLAYERS = 0,
-  GAMES = 1
-}
+const playerColumns: string[] = ["name", "rank", "score", "time", "gamePlayed", "status", "options"];
+const gameColumns: string[] = ["title", "platform", "genre", "publisher", "release", "status", "options"];
 
 @Component({
   selector: 'app-lobby',
@@ -27,46 +26,106 @@ export class LobbyComponent implements OnInit {
   tab: LobbyTab;
   loading: boolean;
   playerTableData: Player[];
-  playerTableColumns: string[] = ["name", "rank", "score", "time", "gamePlayed", "status", "options"];
+  playerTableColumns: string[];
 
   gameTableData: Game[];
-  gameTableColumns: string[] = ["title", "platform", "genre", "publisher", "release", "status", "options"];
+  gameTableColumns: string[];
+
+  searchField: string;
+  searchQuery: string;
 
   LobbyTab = LobbyTab;
 
   constructor(public dialog: MatDialog, public snackBar: MatSnackBar,
-    private userService: UserService, private playerService: PlayerService,
-    private gameService: GameService,
-    private bottomSheet: MatBottomSheet) { 
+      private userService: UserService, private playerService: PlayerService,
+      private gameService: GameService,
+      private bottomSheet: MatBottomSheet) {
+    
+    this.searchField = "";
+    this.searchQuery = "";
+
+    this.playerTableColumns = playerColumns;
+    this.gameTableColumns = gameColumns;
+    
     this.tab = LobbyTab.PLAYERS;
     this.playerTableData = [];
     this.gameTableData = [];
 
-    this.getTableData();
+    this.getAllTableData();
   }
 
-  getTableData() {
+  // makes a get request for all the data in the table
+  getAllTableData() {
     this.loading = true;
 
-    forkJoin(this.getPlayerData(), this.getGameData()).subscribe(_ => {
+    forkJoin(this.requestPlayerData(), this.requestGameData())
+      .subscribe(([players, games]: [Player[], Game[]])=> {
+        this.setPlayerData(players);
+        this.setGameData(games);
+        this.loading = false;
+    });
+  }
+
+  // requests and sets the data for the given entity, data is 
+  // filtered based on searchField and searchQuery instance variables
+  requestAndSetFilteredTableData(entity) {
+    this.loading = true;
+
+    if(this.searchField == "" || this.searchQuery == "") {
+      this.getAllTableData();
+      return;
+    }
+
+    switch(entity.toLowerCase()) {
+      case "player":
+        this.playerService.findByField(this.searchField, this.searchQuery).subscribe((players: Player[]) => {
+          this.setPlayerData(players);
+          console.log(this.searchField)
+          this.loading = false;
+        });
+        break;
+      case "game":
+        this.gameService.findByField(this.searchField, this.searchQuery).subscribe((games: Game[]) => {
+          this.setGameData(games);
+          this.loading = false;
+        });
+        break;
+      default:
+        this.getAllTableData();
+        break;
+    }
+  }
+
+  requestGameData(): Observable<Game[]> {
+    return this.gameService.findAll();
+  }
+
+  getGameData() {
+    this.loading = true;
+    this.requestGameData().subscribe((games: Game[]) => {
+      this.setGameData(games);
       this.loading = false;
     });
   }
 
-  getGameData(): Observable<Game[]> {
-    const getGamesObserver = this.gameService.findAll();
-
-    getGamesObserver.subscribe((games: Game[]) => this.gameTableData = games);
-
-    return getGamesObserver;
+  setGameData(games: Game[]): void {
+    this.gameTableData = games;
   }
 
-  getPlayerData(): Observable<Player[]> {
-    const getPlayersObserver = this.playerService.findAll();
+  requestPlayerData(): Observable<Player[]> {
+    return this.playerService.findAll();
+  }
 
-    getPlayersObserver.subscribe((players: Player[]) => this.playerTableData = players);    
+  getPlayerData() {
+    this.loading = true;
+    this.requestPlayerData().subscribe((players: Player[]) => {
+      this.setPlayerData(players);
+      this.loading = false;
+    });
+  }
 
-    return getPlayersObserver;
+  setPlayerData(players: Player[]): void {
+    this.playerTableData = players;
   }
 
   getTab(): LobbyTab {
@@ -101,7 +160,7 @@ export class LobbyComponent implements OnInit {
       data: [PlayerDialogState.SHOW, this.playerTableData[index], this.gameTableData],
       autoFocus: false
     }).afterClosed().subscribe(joinedGame => {
-      if(joinedGame) this.getTableData();
+      if(joinedGame) this.refreshTable(true);
     });
   }
 
@@ -111,7 +170,7 @@ export class LobbyComponent implements OnInit {
       data: [GameDialogState.ADD, this.gameTableData[index]],
       autoFocus: false
     }).afterClosed().subscribe((game: Game) => {
-      if(game) this.getGameData();
+      if(game) this.requestAndSetFilteredTableData("game");
     });
   }
 
@@ -121,7 +180,7 @@ export class LobbyComponent implements OnInit {
       data: [GameDialogState.EDIT, this.gameTableData[index]],
       autoFocus: false
     }).afterClosed().subscribe((game: Game) => {
-      if(game) this.getGameData();
+      if(game) this.refreshTable(false);
     });
   }
 
@@ -130,7 +189,7 @@ export class LobbyComponent implements OnInit {
     this.gameService.removeOne(game['_id']).subscribe(removed => {
       if(removed) {
         this.snackBar.open("Succesfully deleted game", "OK");
-        this.getGameData();
+        this.refreshTable(false);
       } else {
         this.snackBar.open("Something went wrong", "CLOSE");
       }
@@ -143,7 +202,7 @@ export class LobbyComponent implements OnInit {
       data: [PlayerDialogState.ADD, this.playerTableData[index], this.gameTableData],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
-      if(player) this.getPlayerData();
+      if(player) this.refreshTable(false);
     });
   }
 
@@ -152,7 +211,7 @@ export class LobbyComponent implements OnInit {
     this.playerService.removeOne(player['_id']).subscribe(removed => {
       if(removed) {
         this.snackBar.open("Succesfully deleted player", "OK");
-        this.getPlayerData();
+        this.refreshTable(false);
       } else {
         this.snackBar.open("Something went wrong", "CLOSE");
       }
@@ -165,14 +224,30 @@ export class LobbyComponent implements OnInit {
       data: [PlayerDialogState.EDIT, this.playerTableData[index], this.gameTableData],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
-      if(player) this.getTableData();      
+      if(player) this.refreshTable(false);
     });
+  }
+
+  setSearchData(searchField: string, searchQuery: string) {
+    this.searchField = searchField;
+    this.searchQuery = searchQuery;
+  }
+
+  refreshTable(refreshAll: boolean): void {
+    if(refreshAll) {
+      this.getAllTableData();
+    } else {
+      const entity = this.getTab() == LobbyTab.PLAYERS ? "player" : "game";
+      this.requestAndSetFilteredTableData(entity);
+    }
   }
 
   onSearchClick() {
     this.bottomSheet.open(SearchBottomSheetComponent, {
       panelClass: 'min-width-65vw',
-      data: [this.getTab()]
+      data: [this.getTab(), 
+        (field, query) => this.setSearchData(field, query), 
+        (refreshAll) => this.refreshTable(refreshAll)]
     });
   }
 
