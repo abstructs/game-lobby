@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTable, MatSnackBar, MatTabChangeEvent, MatBottomSheet } from '@angular/material';
+import { MatDialog, MatTable, MatSnackBar, MatTabChangeEvent, MatBottomSheet } from '@angular/material';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { PlayerDialogComponent, PlayerDialogState } from '../player-dialog/player-dialog.component';
 import { UserService } from '../services/user.service';
@@ -13,12 +13,6 @@ export enum LobbyTab {
   PLAYERS = 0,
   GAMES = 1
 }
-
-const GAME_DATA: Game[] = [
-  { title: "Diablo 3", platform: "PC", genre: "RPG", publisher: "Blizzard", release: 2015, status: "Active" },
-  { title: "Call Of Duty", platform: "Xbox", genre: "FPS", publisher: "Activision", release: 2013, status: "Active" },
-  { title: "League of Legends", platform: "PC", genre: "MOBA", publisher: "Riot", release: 2011, status: "Active" }
-];
 
 @Component({
   selector: 'app-lobby',
@@ -75,7 +69,7 @@ export class LobbyComponent implements OnInit {
     return getPlayersObserver;
   }
 
-  getTab() {
+  getTab(): LobbyTab {
     return this.tab;
   }
 
@@ -177,7 +171,8 @@ export class LobbyComponent implements OnInit {
 
   onSearchClick() {
     this.bottomSheet.open(SearchBottomSheetComponent, {
-      panelClass: 'width-65'
+      panelClass: 'min-width-65vw',
+      data: [this.getTab()]
     });
   }
 

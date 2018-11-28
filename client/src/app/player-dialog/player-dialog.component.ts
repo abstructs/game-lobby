@@ -62,8 +62,6 @@ export class PlayerDialogComponent implements OnInit {
       this.playerData = data[1];
       this.games = data[2];
 
-      console.log(this.games);
-
       this.playerForm = new FormGroup({
         name: new FormControl(this.playerData ? this.playerData.name : '', [
           Validators.required
@@ -90,7 +88,7 @@ export class PlayerDialogComponent implements OnInit {
     (<any>Object).values(formGroup.controls).forEach(control => {
       control.markAsTouched();
 
-      if (control.controls) {
+      if(control.controls) {
         this.setFormTouched(control);
       }
     });

@@ -1,7 +1,17 @@
-<div class="container">
-  <mat-form-field>
-    <input name="query" matInput placeholder="Search">
+<div [formGroup]="searchForm" class="container">
+
+  <mat-form-field class="width-50">
+    <mat-select formControlName="field" placeholder="Select a field to seach by">
+      <mat-option *ngFor="let field of getTab() == LobbyTab.PLAYERS ? getPlayerFields() : getGameFields()" [value]="field">
+        {{ field }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="field.invalid && (field.dirty || field.touched)">Invalid field</mat-error>
   </mat-form-field>
 
-  <button color="primary" mat-button>Search</button>
+  <mat-form-field>
+    <input (keyup)="onSearchKeyPress()" formControlName="query" matInput placeholder="Search">
+    <mat-error *ngIf="query.invalid && (query.dirty || query.touched)">Invalid search query</mat-error>
+  </mat-form-field>
+
 </div>

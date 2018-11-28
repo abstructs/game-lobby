@@ -37,10 +37,12 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/search/:name', (req, res) => {
-    const name = req.params.name;
+router.get('/search/:field/:value', (req, res) => {
+    const { field, value } = req.params;
 
-    Player.find({ name }, (err, players) => {
+    const searchLikeRegex = new RegExp(`^${value}`, 'i');
+
+    Player.find({ [field]: searchLikeRegex }, (err, players) => {
         if(err) {
             console.trace(err);
             throw err;
@@ -60,7 +62,7 @@ router.post('/join-game', (req, res) => {
         }
     });
 
-    const insertGamePromise = Game.findOneAndUpdate({ _id: gameId }, { status: "Unavailible" }, (err, game) => {
+    const insertGamePromise = Game.findOneAndUpdate({ _id: gameId }, { status: "Active" }, (err, game) => {
         if(err) {
             console.trace(err);
             throw err;

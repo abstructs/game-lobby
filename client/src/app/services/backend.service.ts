@@ -26,6 +26,14 @@ export class BackendService {
 
   // game
 
+  findGamesByField(gameField: string, gameFieldValue: string) {
+    return this.http.get(`${this.api_url}/game/search/${gameField}/${gameFieldValue}`)
+  }
+
+  findGamesByTitle(gameTitle: string): Observable<Object> {
+    return this.http.get(`${this.api_url}/game/search/${gameTitle}`);
+  }
+
   findAllGames(): Observable<Object> {
     return this.http.get(`${this.api_url}/game`);
   }
@@ -45,6 +53,10 @@ export class BackendService {
   }
 
   // player
+
+  findPlayersByField(playerField: string, playerFieldValue: string): Observable<Object> {
+    return this.http.get(`${this.api_url}/player/search/${playerField}/${playerFieldValue}`);
+  }
 
   findAllPlayers(): Observable<Object> {
     return this.http.get(`${this.api_url}/player`);

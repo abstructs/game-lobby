@@ -17,7 +17,16 @@ export interface Player {
 })
 export class PlayerService {
 
-  constructor(private backend: BackendService) { } 
+  constructor(private backend: BackendService) { }
+
+  findByField(field: string, value: string): Observable<Player[]> {
+    return this.backend.findPlayersByField(field, value).pipe(
+      map(res => {
+        return res['players'];
+      }),
+      catchError(() => of(null))
+    );
+  }
 
   findAll(): Observable<Player[]> {
     return this.backend.findAllPlayers().pipe(

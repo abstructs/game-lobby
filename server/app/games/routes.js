@@ -36,10 +36,12 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/search/:title', (req, res) => {
-    const title = req.params.title;
+router.get('/search/:field/:value', (req, res) => {
+    const { field, value } = req.params;
 
-    Game.find({ title }, (err, games) => {
+    const searchLikeRegex = new RegExp(`^${value}`);
+
+    Game.find({ [field]: searchLikeRegex }, (err, games) => {
         if(err) {
             console.trace(err);
             throw err;

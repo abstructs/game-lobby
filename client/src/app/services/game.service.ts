@@ -15,10 +15,18 @@ export interface Game {
 @Injectable({
   providedIn: 'root'
 })
-
 export class GameService {
 
   constructor(private backend: BackendService) { }
+
+  findByField(field: string, value: string) {
+    return this.backend.findGamesByField(field, value).pipe(
+      map((res) => {
+        return res['games'];
+      }),
+      catchError(() => of(null))
+    );
+  }
 
   findAll(): Observable<Game[]> {
     return this.backend.findAllGames().pipe(
@@ -26,14 +34,14 @@ export class GameService {
         return res['games'];
       }),
       catchError(() => of(null))
-    )
+    );
   }
 
   removeOne(gameId: string) {
     return this.backend.removeGame(gameId).pipe(
       map(() => true),
       catchError(() => of(false))
-    )
+    );
   }
 
   updateOne(gameId: string, game: Game): Observable<boolean> {
