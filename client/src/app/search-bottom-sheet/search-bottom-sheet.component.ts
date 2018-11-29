@@ -3,7 +3,7 @@ import { MatBottomSheetRef, MatSnackBar, MAT_BOTTOM_SHEET_DATA } from '@angular/
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Player, PlayerService } from '../services/player.service';
 import { GameService, Game } from '../services/game.service';
-import { LobbyTab } from '../services/helper.service';
+import { LobbyTab, SearchQuery } from '../services/helper.service';
 
 @Component({
   selector: 'app-search-bottom-sheet',
@@ -15,6 +15,7 @@ export class SearchBottomSheetComponent {
 
   searchForm: FormGroup;
   tab: LobbyTab;
+  searchQuery: SearchQuery;
 
   get query() {
     return this.searchForm.get('query');
@@ -26,27 +27,51 @@ export class SearchBottomSheetComponent {
 
   LobbyTab = LobbyTab;
 
-  setSearchData: (searchField: string, searchQuery: string) => void;
+  private capitalize(word: string) { 
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  }
+
+  private formatField(field: string): string {
+    if(field == "gamePlayed") {
+      return "Game Played"
+    } else {
+      return this.capitalize(field);
+    }
+  }
+
+  private getDefaultField(): string {
+    const prevQuerySameAsCurrentQuery = this.searchQuery.TAB == this.getTab() && this.searchQuery.FIELD != "";
+    const isPlayerQuery = this.getTab() == LobbyTab.PLAYERS;
+
+    if(prevQuerySameAsCurrentQuery) {
+      return this.formatField(this.searchQuery.FIELD);
+    } else if(isPlayerQuery) {
+      return this.getFirstPlayerField();
+    }
+    else {
+      return this.getFirstGameField();
+    }
+  } 
+
+  setSearchData: (searchQuery: SearchQuery) => void;
   refreshTable: (refreshAll: boolean) => void;
 
-  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: [LobbyTab, 
-        (searchField: string, searchQuery: string) => void, (refreshAll: boolean) => void],
+  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: [SearchQuery, LobbyTab, 
+        (searchQuery) => void, (refreshAll: boolean) => void],
       private bottomSheetRef: MatBottomSheetRef<SearchBottomSheetComponent>, 
       public snackBar: MatSnackBar, private playerService: PlayerService,
       private gameService: GameService) { 
-
-    this.tab = data[0];
-    this.setSearchData = this.data[1];
-    this.refreshTable = this.data[2];
+    
+    this.searchQuery = data[0];
+    this.tab = data[1];
+    this.setSearchData = this.data[2];
+    this.refreshTable = this.data[3];
 
     this.searchForm = new FormGroup({
-      field: new FormControl( 
-        this.getTab() == LobbyTab.PLAYERS ? 
-        this.getFirstPlayerField() :
-        this.getFirstGameField(), [
+      field: new FormControl(this.getDefaultField(), [
         Validators.required
       ]),
-      query: new FormControl('', [
+      query: new FormControl(this.searchQuery.QUERY, [
         Validators.maxLength(30)
       ])
     });
@@ -86,6 +111,7 @@ export class SearchBottomSheetComponent {
     });
   }
 
+  // gets filtered data and refreshes table
   onSearchKeyUp() {
     if(this.searchForm.valid) {
       let field = this.field.value.toLowerCase();
@@ -95,27 +121,16 @@ export class SearchBottomSheetComponent {
         field = "gamePlayed";
       }
 
-      this.setSearchData(field, query);
-      this.refreshTable(false);
+      this.searchQuery = {
+        FIELD: field,
+        QUERY: query,
+        TAB: this.getTab()
+      }
 
-      // this.playerService.findByField(field, query).subscribe((players: Player[]) => {
-      //   this.playerSearchCallback(players);
-      // })
+      this.setSearchData(this.searchQuery);
+      this.refreshTable(false);
     } else {
       this.setFormTouched(this.searchForm);
     }
   }
-    
-  // onGameSearchKeyUp() {
-  //   if(this.searchForm.valid) {
-  //     const field = this.field.value.toLowerCase();
-  //     const query = this.query.value.toLowerCase();
-
-  //     this.gameService.findByField(field, query).subscribe((games: Game[]) => {
-  //       console.log(games);
-  //     })
-  //   } else {
-  //     this.setFormTouched(this.searchForm);
-  //   }
-  // }
 }

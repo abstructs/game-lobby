@@ -6,6 +6,12 @@ export enum LobbyTab {
   GAMES = 1
 }
 
+export interface SearchQuery {
+  FIELD: string;
+  QUERY: string;
+  TAB: LobbyTab;
+}
+
 @Injectable({
   providedIn: 'root'
 })

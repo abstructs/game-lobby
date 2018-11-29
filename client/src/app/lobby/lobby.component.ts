@@ -8,7 +8,7 @@ import { GameService, Game } from '../services/game.service';
 import { GameDialogComponent, GameDialogState } from '../game-dialog/game-dialog.component';
 import { forkJoin, Observable } from 'rxjs';
 import { SearchBottomSheetComponent } from '../search-bottom-sheet/search-bottom-sheet.component';
-import { LobbyTab } from '../services/helper.service';
+import { LobbyTab, SearchQuery } from '../services/helper.service';
 
 const playerColumns: string[] = ["name", "rank", "score", "time", "gamePlayed", "status", "options"];
 const gameColumns: string[] = ["title", "platform", "genre", "publisher", "release", "status", "options"];
@@ -31,8 +31,7 @@ export class LobbyComponent implements OnInit {
   gameTableData: Game[];
   gameTableColumns: string[];
 
-  searchField: string;
-  searchQuery: string;
+  searchQuery: SearchQuery;
 
   LobbyTab = LobbyTab;
 
@@ -40,9 +39,6 @@ export class LobbyComponent implements OnInit {
       private userService: UserService, private playerService: PlayerService,
       private gameService: GameService,
       private bottomSheet: MatBottomSheet) {
-    
-    this.searchField = "";
-    this.searchQuery = "";
 
     this.playerTableColumns = playerColumns;
     this.gameTableColumns = gameColumns;
@@ -50,6 +46,12 @@ export class LobbyComponent implements OnInit {
     this.tab = LobbyTab.PLAYERS;
     this.playerTableData = [];
     this.gameTableData = [];
+
+    this.setSearchData({
+      FIELD: "",
+      QUERY: "",
+      TAB: this.getTab()
+    });
 
     this.getAllTableData();
   }
@@ -68,24 +70,23 @@ export class LobbyComponent implements OnInit {
 
   // requests and sets the data for the given entity, data is 
   // filtered based on searchField and searchQuery instance variables
-  requestAndSetFilteredTableData(entity) {
+  requestAndSetFilteredTableData() {
     this.loading = true;
 
-    if(this.searchField == "" || this.searchQuery == "") {
+    if(!this.validSearchQuery()) {
       this.getAllTableData();
       return;
     }
 
-    switch(entity.toLowerCase()) {
-      case "player":
-        this.playerService.findByField(this.searchField, this.searchQuery).subscribe((players: Player[]) => {
+    switch(this.searchQuery.TAB) {
+      case LobbyTab.PLAYERS:
+        this.playerService.findByField(this.searchQuery).subscribe((players: Player[]) => {
           this.setPlayerData(players);
-          console.log(this.searchField)
           this.loading = false;
         });
         break;
-      case "game":
-        this.gameService.findByField(this.searchField, this.searchQuery).subscribe((games: Game[]) => {
+      case LobbyTab.GAMES:
+        this.gameService.findByField(this.searchQuery).subscribe((games: Game[]) => {
           this.setGameData(games);
           this.loading = false;
         });
@@ -170,7 +171,7 @@ export class LobbyComponent implements OnInit {
       data: [GameDialogState.ADD, this.gameTableData[index]],
       autoFocus: false
     }).afterClosed().subscribe((game: Game) => {
-      if(game) this.requestAndSetFilteredTableData("game");
+      if(game) this.requestAndSetFilteredTableData();
     });
   }
 
@@ -228,26 +229,31 @@ export class LobbyComponent implements OnInit {
     });
   }
 
-  setSearchData(searchField: string, searchQuery: string) {
-    this.searchField = searchField;
+  setSearchData(searchQuery: SearchQuery) {
     this.searchQuery = searchQuery;
   }
 
   refreshTable(refreshAll: boolean): void {
     if(refreshAll) {
+      this.setSearchData({ QUERY: "", FIELD: "", TAB: this.getTab() });
       this.getAllTableData();
     } else {
-      const entity = this.getTab() == LobbyTab.PLAYERS ? "player" : "game";
-      this.requestAndSetFilteredTableData(entity);
+      this.requestAndSetFilteredTableData();
     }
+  }
+
+  validSearchQuery(): boolean {
+    return this.searchQuery.FIELD != "" && this.searchQuery.QUERY != "";
   }
 
   onSearchClick() {
     this.bottomSheet.open(SearchBottomSheetComponent, {
       panelClass: 'min-width-65vw',
-      data: [this.getTab(), 
-        (field, query) => this.setSearchData(field, query), 
-        (refreshAll) => this.refreshTable(refreshAll)]
+      data: [
+        this.searchQuery,
+        this.getTab(), 
+        (searchQuery: SearchQuery) => this.setSearchData(searchQuery), 
+        (refreshAll: boolean) => this.refreshTable(refreshAll)]
     });
   }
 

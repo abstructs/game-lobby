@@ -5,6 +5,7 @@ import { Player } from './player.service';
 import { HelperService } from './helper.service';
 import { HttpHeaders } from '@angular/common/http';
 import { Game } from './game.service';
+import { SearchQuery } from './helper.service';
 
 // import { Game } from './game.service';
 
@@ -26,8 +27,8 @@ export class BackendService {
 
   // game
 
-  findGamesByField(gameField: string, gameFieldValue: string) {
-    return this.http.get(`${this.api_url}/game/search/${gameField}/${gameFieldValue}`)
+  findGamesByField(searchQuery: SearchQuery) {
+    return this.http.get(`${this.api_url}/game/search/${searchQuery.FIELD}/${searchQuery.QUERY}`)
   }
 
   findGamesByTitle(gameTitle: string): Observable<Object> {
@@ -54,8 +55,8 @@ export class BackendService {
 
   // player
 
-  findPlayersByField(playerField: string, playerFieldValue: string): Observable<Object> {
-    return this.http.get(`${this.api_url}/player/search/${playerField}/${playerFieldValue}`);
+  findPlayersByField(searchQuery: SearchQuery): Observable<Object> {
+    return this.http.get(`${this.api_url}/player/search/${searchQuery.FIELD}/${searchQuery.QUERY}`);
   }
 
   findAllPlayers(): Observable<Object> {

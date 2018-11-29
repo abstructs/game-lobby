@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { BackendService } from './backend.service';
 import { map, catchError } from 'rxjs/operators';
+import { SearchQuery } from './helper.service';
 
 export interface Game {
   title: string;
@@ -19,8 +20,8 @@ export class GameService {
 
   constructor(private backend: BackendService) { }
 
-  findByField(field: string, value: string) {
-    return this.backend.findGamesByField(field, value).pipe(
+  findByField(searchQuery: SearchQuery) {
+    return this.backend.findGamesByField(searchQuery).pipe(
       map((res) => {
         return res['games'];
       }),
