@@ -161,7 +161,6 @@ export class LobbyComponent implements OnInit {
 
   onLogoutClick(): void {
     this.userService.logout();
-    this.tab = LobbyTab.PLAYERS;
   }
 
   onLoginClick(): void {
@@ -171,11 +170,7 @@ export class LobbyComponent implements OnInit {
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: "60%"
-    }).afterClosed().subscribe((loggedIn: boolean) => {
-      if(loggedIn) {
-        location.reload();
-      }
-    })
+    });
   }
 
   onJoinGameClick(index: number): void {

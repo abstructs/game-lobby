@@ -161,7 +161,7 @@ export class PlayerDialogComponent implements OnInit {
   }
 
   getStatuses() {
-    return ["Availible", "Busy"];
+    return ["Available", "Busy"];
   }
 
   getPlayer(): Player {

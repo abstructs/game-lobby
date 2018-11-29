@@ -27,10 +27,12 @@ export class HelperService {
 
   setToken(token: string) {
     this.cookieService.set('token', token);
+    location.reload();
   }
 
   revokeToken() {
     this.cookieService.delete('token');
+    location.reload();
   }
 
   getToken(): string {
