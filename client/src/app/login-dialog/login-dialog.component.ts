@@ -79,7 +79,7 @@ export class LoginDialogComponent implements OnInit {
       this.userService.authenticate(this.username.value, this.password.value).subscribe(validCreds => {
         if(validCreds) {
           this.snackBar.open("Successfully logged on", "OK");
-          this.dialogRef.close();
+          this.dialogRef.close(true);
         } else {
           this.snackBar.open("Incorrect password", "CLOSE");
         }

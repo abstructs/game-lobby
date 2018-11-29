@@ -18,7 +18,7 @@ export enum PlayerDialogState {
 })
 export class PlayerDialogComponent implements OnInit {
   playerData: Player;
-  games: Game[];
+  games: Object[];
   mode: string;
 
   playerForm: FormGroup;
@@ -53,7 +53,7 @@ export class PlayerDialogComponent implements OnInit {
   PlayerDialogState = PlayerDialogState;
 
   constructor(public dialogRef: MatDialogRef<PlayerDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: [PlayerDialogState, Player, Game[]],
+    @Inject(MAT_DIALOG_DATA) public data: [PlayerDialogState, Player, Object[]],
     public snackBar: MatSnackBar,
     private playerService: PlayerService) {
       dialogRef.disableClose = true;
@@ -156,7 +156,7 @@ export class PlayerDialogComponent implements OnInit {
     return ["1", "2", "3", "4", "5"];
   }
 
-  getGames(): Game[] {
+  getGames(): Object[] {
     return this.games;
   }
 

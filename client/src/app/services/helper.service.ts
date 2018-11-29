@@ -12,12 +12,18 @@ export interface SearchQuery {
   TAB: LobbyTab;
 }
 
+export const api_url = 'http://localhost:3000';
+
 @Injectable({
   providedIn: 'root'
 })
 export class HelperService {
 
   constructor(private cookieService: CookieService) { }
+
+  hasToken() {
+    return this.cookieService.check('token');
+  }
 
   setToken(token: string) {
     this.cookieService.set('token', token);

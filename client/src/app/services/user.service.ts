@@ -15,7 +15,7 @@ export class UserService {
     private helperService: HelperService) { }
 
   isLoggedIn(): boolean {
-    return this.helperService.getToken() != '';
+    return this.helperService.hasToken();
   }
 
   logout(): void {

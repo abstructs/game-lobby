@@ -25,7 +25,7 @@ const authenticateUser = (req, res, next) => {
     }
 }
 
-router.get('/', (req, res) => {
+router.get('/', authenticateUser, (req, res) => {
     Game.find({}, (err, games) => {
         if(err) {
             console.trace(err);
@@ -35,6 +35,17 @@ router.get('/', (req, res) => {
         res.status(200).send({ games });
     });
 });
+
+router.get('/titles', (req, res) => {
+    Game.find({}, { title: 1, _id: 0 }, (err, games) => {
+        if(err) {
+            console.trace(err);
+            throw err;
+        }
+
+        res.status(200).send({ games });
+    });
+})
 
 router.get('/search/:field/:value', (req, res) => {
     const { field, value } = req.params;

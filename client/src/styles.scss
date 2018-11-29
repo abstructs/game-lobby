@@ -16,6 +16,8 @@ $app-accent:  mat-palette($mat-light-blue, A200, A100, A400);
 // The warn palette is optional (defaults to red).
 $app-warn:    mat-palette($mat-red);
 
+$app-gray: #37474F;
+
 // Create the theme object (a Sass map containing all of the palettes).
 $apptheme: mat-dark-theme($app-primary, $app-accent, $app-warn);
 
@@ -46,6 +48,10 @@ $apptheme: mat-dark-theme($app-primary, $app-accent, $app-warn);
 
 .min-width-65vw {
     min-width: 65vw !important;
+}
+
+.mat-tab-disabled {
+    background-color: $app-gray !important;
 }
 
 // .width-60-percent {

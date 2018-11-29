@@ -5,7 +5,7 @@ import { Player } from './player.service';
 import { HelperService } from './helper.service';
 import { HttpHeaders } from '@angular/common/http';
 import { Game } from './game.service';
-import { SearchQuery } from './helper.service';
+import { SearchQuery, api_url } from './helper.service';
 
 // import { Game } from './game.service';
 
@@ -13,10 +13,12 @@ import { SearchQuery } from './helper.service';
   providedIn: 'root'
 })
 export class BackendService {
-  api_url = "http://localhost:3000";
+  api_url: string;
   httpOptions: { headers: HttpHeaders };
 
   constructor(private http: HttpClient, private helperService: HelperService) { 
+    this.api_url = api_url;
+    
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json',
@@ -36,7 +38,11 @@ export class BackendService {
   }
 
   findAllGames(): Observable<Object> {
-    return this.http.get(`${this.api_url}/game`);
+    return this.http.get(`${this.api_url}/game`, this.httpOptions);
+  }
+
+  findAllGameTitles(): Observable<Object> {
+    return this.http.get(`${this.api_url}/game/titles`);
   }
 
   addGame(game: Game): Observable<Object> {
@@ -78,6 +84,9 @@ export class BackendService {
   }
 
   removePlayer(playerId: string) {
+    console.log("remove player")
+    console.log(this.httpOptions);
+
     return this.http.delete(`${this.api_url}/player/delete/${playerId}`, this.httpOptions);
   }
 

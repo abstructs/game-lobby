@@ -38,6 +38,15 @@ export class GameService {
     );
   }
 
+  findAllTitles(): Observable<Object[]> {
+    return this.backend.findAllGameTitles().pipe(
+      map(res => {
+        return res['games'];
+      }),
+      catchError(() => of([]))
+    )
+  }
+
   removeOne(gameId: string) {
     return this.backend.removeGame(gameId).pipe(
       map(() => true),

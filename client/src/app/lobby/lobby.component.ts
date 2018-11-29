@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatTable, MatSnackBar, MatTabChangeEvent, MatBottomSheet } from '@angular/material';
+import { MatDialog, MatTable, MatSnackBar, MatTabChangeEvent, MatBottomSheet, MatTabGroup } from '@angular/material';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { PlayerDialogComponent, PlayerDialogState } from '../player-dialog/player-dialog.component';
 import { UserService } from '../services/user.service';
@@ -21,17 +21,18 @@ const gameColumns: string[] = ["title", "platform", "genre", "publisher", "relea
 })
 export class LobbyComponent implements OnInit {
 
-  @ViewChild(MatTable) table: MatTable<Player[]>;
-
   tab: LobbyTab;
   loading: boolean;
   playerTableData: Player[];
   playerTableColumns: string[];
 
   gameTableData: Game[];
+  gameTitles: Object[];
   gameTableColumns: string[];
 
   searchQuery: SearchQuery;
+
+
 
   LobbyTab = LobbyTab;
 
@@ -56,21 +57,31 @@ export class LobbyComponent implements OnInit {
     this.getAllTableData();
   }
 
+  private requestGameTitles(): Observable<Object[]> {
+    return this.gameService.findAllTitles();
+  }
+
+  private setGameTitles(gameTitles: Object[]) {
+    this.gameTitles = gameTitles;
+  }
+
   // makes a get request for all the data in the table
+  // NOTE: game is a protected entity which is why we have the redundant call to games
   getAllTableData() {
     this.loading = true;
 
-    forkJoin(this.requestPlayerData(), this.requestGameData())
-      .subscribe(([players, games]: [Player[], Game[]])=> {
+    forkJoin(this.requestPlayerData(), this.requestGameData(), this.requestGameTitles())
+      .subscribe(([players, games, gameTitles]: [Player[], Game[], Object[]]) => {
         this.setPlayerData(players);
         this.setGameData(games);
+        this.setGameTitles(gameTitles);
         this.loading = false;
     });
   }
 
   // requests and sets the data for the given entity, data is 
   // filtered based on searchField and searchQuery instance variables
-  requestAndSetFilteredTableData() {
+  private requestAndSetFilteredTableData() {
     this.loading = true;
 
     if(!this.validSearchQuery()) {
@@ -87,6 +98,8 @@ export class LobbyComponent implements OnInit {
         break;
       case LobbyTab.GAMES:
         this.gameService.findByField(this.searchQuery).subscribe((games: Game[]) => {
+          const allGameTitles = games.map(game => ({ title: game.title }));
+          this.setGameTitles(allGameTitles);
           this.setGameData(games);
           this.loading = false;
         });
@@ -134,7 +147,12 @@ export class LobbyComponent implements OnInit {
   }
 
   onTabChange(event: MatTabChangeEvent) {
-    this.tab = event.index;
+    const tabIntent = event.index;
+    if(tabIntent == this.LobbyTab.GAMES && !this.isLoggedIn()) {
+      this.snackBar.open("Please login to do that!", "CLOSE");
+    } else {
+      this.tab = event.index;
+    }
   }
 
   isLoggedIn(): boolean {
@@ -143,6 +161,7 @@ export class LobbyComponent implements OnInit {
 
   onLogoutClick(): void {
     this.userService.logout();
+    this.tab = LobbyTab.PLAYERS;
   }
 
   onLoginClick(): void {
@@ -152,7 +171,11 @@ export class LobbyComponent implements OnInit {
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: "60%"
-    });
+    }).afterClosed().subscribe((loggedIn: boolean) => {
+      if(loggedIn) {
+        location.reload();
+      }
+    })
   }
 
   onJoinGameClick(index: number): void {
@@ -200,7 +223,7 @@ export class LobbyComponent implements OnInit {
   onAddPlayerClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.ADD, this.playerTableData[index], this.gameTableData],
+      data: [PlayerDialogState.ADD, this.playerTableData[index], this.gameTitles],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
       if(player) this.refreshTable(false);
@@ -222,7 +245,7 @@ export class LobbyComponent implements OnInit {
   onEditPlayerClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.EDIT, this.playerTableData[index], this.gameTableData],
+      data: [PlayerDialogState.EDIT, this.playerTableData[index], this.gameTitles],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
       if(player) this.refreshTable(false);
