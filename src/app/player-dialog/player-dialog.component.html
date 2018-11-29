@@ -1,0 +1,135 @@
+<h2 mat-dialog-title>Player</h2>
+<mat-dialog-content>
+
+  <!-- Show Player Dialog -->
+  <div *ngIf="getMode() == PlayerDialogState.SHOW" class="container" id="show_player_dialog">
+    <mat-list>
+      <mat-list-item>
+        Player: {{ getPlayer().name }}
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+      <mat-list-item>Rank: {{ getPlayer().rank }}</mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item>Score: {{ getPlayer().score }}</mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item>Time: {{ getPlayer().time }}</mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <mat-list-item>Favourite Game: {{ getPlayer().gamePlayed }}</mat-list-item>
+
+      <div [formGroup]="playerForm" class="container">
+        <mat-form-field>
+          <mat-select formControlName="gamePlayed" placeholder="Select Game">
+            <mat-option *ngFor="let game of getGames()" [value]="game">
+              {{ game.title }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="gamePlayed.invalid && (gamePlayed.dirty || gamePlayed.touched)">Invalid game</mat-error>
+        </mat-form-field>
+      </div>
+      
+    </mat-list>
+  </div>
+
+  <!-- Edit Player Dialog -->
+  <div [formGroup]="playerForm" *ngIf="getMode() == PlayerDialogState.EDIT" class="container" id="edit_player_dialog">
+      <mat-form-field>
+        <input formControlName="name" matInput placeholder="Player">
+        <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Invalid player name</mat-error>
+      </mat-form-field>
+      
+      <mat-form-field>
+        <mat-select formControlName="rank" placeholder="Select A Rating">
+          <mat-option *ngFor="let rank of getRanks()" [value]="rank">
+            {{ rank }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="rank.invalid && (rank.dirty || rank.touched)">Invalid rank</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <input formControlName="score" matInput placeholder="Score">
+        <mat-error *ngIf="score.invalid && (score.dirty || score.touched)">Invalid score</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <input formControlName="time" matInput placeholder="Time">
+        <mat-error *ngIf="time.invalid && (time.dirty || time.touched)">Invalid time</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-select formControlName="gamePlayed" placeholder="Select A Game">
+          <mat-option *ngFor="let game of getGames()" [value]="game.title">
+            {{ game.title }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="gamePlayed.invalid && (gamePlayed.dirty || gamePlayed.touched)">Invalid game</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-select formControlName="status" placeholder="Select A Status">
+          <mat-option *ngFor="let status of getStatuses()" [value]="status">
+            {{ status }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="status.invalid && (status.dirty || status.touched)">Invalid status</mat-error>
+      </mat-form-field>
+  </div>
+
+    <!-- Add Player Dialog -->
+  <div [formGroup]="playerForm" *ngIf="getMode() == PlayerDialogState.ADD" class="container" id="add_player_dialog">
+    <mat-form-field>
+      <input formControlName="name" matInput placeholder="Player">
+      <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Invalid player name</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="rank" placeholder="Select A Rating">
+        <mat-option *ngFor="let rank of getRanks()" [value]="rank">
+          {{ rank }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="rank.invalid && (rank.dirty || rank.touched)">Invalid rank</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input formControlName="score" matInput placeholder="Score">
+      <mat-error *ngIf="score.invalid && (score.dirty || score.touched)">Invalid score</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input formControlName="time" matInput placeholder="Time">
+      <mat-error *ngIf="time.invalid && (time.dirty || time.touched)">Invalid time</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="gamePlayed" placeholder="Select A Favourite Game">
+        <mat-option *ngFor="let game of getGames()" [value]="game.title">
+          {{ game.title }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="gamePlayed.invalid && (gamePlayed.dirty || gamePlayed.touched)">Invalid game</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="status" placeholder="Select A Status">
+        <mat-option *ngFor="let status of getStatuses()" [value]="status">
+          {{ status }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="status.invalid && (status.dirty || status.touched)">Invalid status</mat-error>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button (click)="onCloseClick()" mat-button>Cancel</button>
+  <button (click)="onJoinClick()" *ngIf="getMode() == PlayerDialogState.SHOW" mat-button="true">Join</button>
+  <button (click)="onAddClick()" *ngIf="getMode() == PlayerDialogState.ADD" mat-button="true">Add</button>
+  <button (click)="onUpdateClick()" *ngIf="getMode() == PlayerDialogState.EDIT" mat-button="true">Update</button>
+</mat-dialog-actions>
