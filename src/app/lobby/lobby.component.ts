@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatTable, MatSnackBar, MatTabChangeEvent, MatBottomSheet, MatTabGroup } from '@angular/material';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { MatDialog, MatTable, MatSnackBar, MatTabChangeEvent, MatBottomSheet, MatTabGroup, MatTableDataSource } from '@angular/material';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 import { PlayerDialogComponent, PlayerDialogState } from '../player-dialog/player-dialog.component';
 import { UserService } from '../services/user.service';
@@ -23,30 +23,32 @@ export class LobbyComponent implements OnInit {
 
   tab: LobbyTab;
   loading: boolean;
-  playerTableData: Player[];
+  playerDataSource: MatTableDataSource<Player> = new MatTableDataSource();;
   playerTableColumns: string[];
 
-  gameTableData: Game[];
+  gameDataSource: MatTableDataSource<Game> = new MatTableDataSource();;
   gameTitles: Object[];
   gameTableColumns: string[];
 
   searchQuery: SearchQuery;
 
-
+  // playerDataSource: MatTableDataSource<Player[]>;
 
   LobbyTab = LobbyTab;
 
+  ngOnInit() { 
+
+  }
+
   constructor(public dialog: MatDialog, public snackBar: MatSnackBar,
       private userService: UserService, private playerService: PlayerService,
-      private gameService: GameService,
-      private bottomSheet: MatBottomSheet) {
+      private gameService: GameService, private bottomSheet: MatBottomSheet,
+      private changeDetectorRefs: ChangeDetectorRef) {
 
     this.playerTableColumns = playerColumns;
     this.gameTableColumns = gameColumns;
     
     this.tab = LobbyTab.PLAYERS;
-    this.playerTableData = [];
-    this.gameTableData = [];
 
     this.setSearchData({
       FIELD: "",
@@ -123,7 +125,8 @@ export class LobbyComponent implements OnInit {
   }
 
   setGameData(games: Game[]): void {
-    this.gameTableData = games;
+    this.gameDataSource.data = games;
+    this.changeDetectorRefs.detectChanges();
   }
 
   requestPlayerData(): Observable<Player[]> {
@@ -139,7 +142,7 @@ export class LobbyComponent implements OnInit {
   }
 
   setPlayerData(players: Player[]): void {
-    this.playerTableData = players;
+    this.playerDataSource.data = players;
   }
 
   getTab(): LobbyTab {
@@ -176,7 +179,7 @@ export class LobbyComponent implements OnInit {
   onJoinGameClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.SHOW, this.playerTableData[index], this.gameTableData],
+      data: [PlayerDialogState.SHOW, this.playerDataSource[index], this.gameDataSource],
       autoFocus: false
     }).afterClosed().subscribe(joinedGame => {
       if(joinedGame) this.refreshTable(true);
@@ -186,7 +189,7 @@ export class LobbyComponent implements OnInit {
   onAddGameClick(index: number): void {
     const dialogRef = this.dialog.open(GameDialogComponent, {
       width: "70%",
-      data: [GameDialogState.ADD, this.gameTableData[index]],
+      data: [GameDialogState.ADD, this.gameDataSource[index]],
       autoFocus: false
     }).afterClosed().subscribe((game: Game) => {
       if(game) this.requestAndSetFilteredTableData();
@@ -196,7 +199,7 @@ export class LobbyComponent implements OnInit {
   onEditGameClick(index: number): void {
     const dialogRef = this.dialog.open(GameDialogComponent, {
       width: "70%",
-      data: [GameDialogState.EDIT, this.gameTableData[index]],
+      data: [GameDialogState.EDIT, this.gameDataSource[index]],
       autoFocus: false
     }).afterClosed().subscribe((game: Game) => {
       if(game) this.refreshTable(false);
@@ -204,7 +207,7 @@ export class LobbyComponent implements OnInit {
   }
 
   onDeleteGameClick(index: number): void {
-    const game = this.gameTableData[index];
+    const game = this.gameDataSource[index];
     this.gameService.removeOne(game['_id']).subscribe(removed => {
       if(removed) {
         this.snackBar.open("Succesfully deleted game", "OK");
@@ -218,7 +221,7 @@ export class LobbyComponent implements OnInit {
   onAddPlayerClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.ADD, this.playerTableData[index], this.gameTitles],
+      data: [PlayerDialogState.ADD, this.playerDataSource[index], this.gameTitles],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
       if(player) this.refreshTable(false);
@@ -226,7 +229,7 @@ export class LobbyComponent implements OnInit {
   }
 
   onDeletePlayerClick(index: number): void {
-    const player = this.playerTableData[index];
+    const player = this.playerDataSource[index];
     this.playerService.removeOne(player['_id']).subscribe(removed => {
       if(removed) {
         this.snackBar.open("Succesfully deleted player", "OK");
@@ -240,7 +243,7 @@ export class LobbyComponent implements OnInit {
   onEditPlayerClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.EDIT, this.playerTableData[index], this.gameTitles],
+      data: [PlayerDialogState.EDIT, this.playerDataSource[index], this.gameTitles],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
       if(player) this.refreshTable(false);
@@ -274,6 +277,4 @@ export class LobbyComponent implements OnInit {
         (refreshAll: boolean) => this.refreshTable(refreshAll)]
     });
   }
-
-  ngOnInit() { }
 }

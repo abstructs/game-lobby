@@ -25,7 +25,7 @@ export class PlayerService {
       map(res => {
         return res['players'];
       }),
-      catchError(() => of(null))
+      catchError(() => of([]))
     );
   }
 
@@ -34,7 +34,7 @@ export class PlayerService {
       map(res => {
         return res['players'];
       }),
-      catchError(() => of(null))
+      catchError(() => of([]))
     )
   }
 

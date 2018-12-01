@@ -84,9 +84,6 @@ export class BackendService {
   }
 
   removePlayer(playerId: string) {
-    console.log("remove player")
-    console.log(this.httpOptions);
-
     return this.http.delete(`${this.api_url}/player/delete/${playerId}`, this.httpOptions);
   }
 

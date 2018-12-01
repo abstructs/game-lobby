@@ -9,7 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule, MatTableModule, 
   MatToolbarModule, MatDialogModule, MatFormFieldModule, MatInputModule, 
   MatListModule, MatDividerModule, MatSelectModule, MatSnackBarModule,
-  MatProgressBarModule, MatTabsModule, MatIconModule, MatBottomSheetModule } from '@angular/material';
+  MatProgressBarModule, MatTabsModule, MatIconModule, MatBottomSheetModule, MatPaginatorModule } from '@angular/material';
 
 import { LobbyComponent } from './lobby/lobby.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
@@ -55,7 +55,8 @@ import { SearchBottomSheetComponent } from './search-bottom-sheet/search-bottom-
     MatProgressBarModule,
     MatTabsModule,
     MatIconModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatPaginatorModule
   ],
   providers: [
     BackendService,

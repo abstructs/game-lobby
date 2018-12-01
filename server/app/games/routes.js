@@ -37,7 +37,7 @@ router.get('/', authenticateUser, (req, res) => {
 });
 
 router.get('/titles', (req, res) => {
-    Game.find({}, { title: 1, _id: 0 }, (err, games) => {
+    Game.find({ status: 'Inactive' }, { title: 1, _id: 0 }, (err, games) => {
         if(err) {
             console.trace(err);
             throw err;

@@ -8,10 +8,10 @@
     <button (click)="onLoginClick()" mat-button *ngIf="!isLoggedIn()">Login</button>
     <button (click)="onLogoutClick()" mat-button *ngIf="isLoggedIn()">Logout</button>
 </mat-toolbar>
-<mat-tab-group #tabGroup (selectedTabChange)="onTabChange($event)">
+<mat-tab-group (selectedTabChange)="onTabChange($event)">
 
     <mat-tab label="Players">
-      <table mat-table [dataSource]="playerTableData">
+      <table mat-table [dataSource]="playerDataSource">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Player </th>
           <td mat-cell *matCellDef="let element;"> {{ element.name }} </td>
@@ -62,7 +62,7 @@
 
     <mat-tab [disabled]="!isLoggedIn()" label="Games">
 
-      <table mat-table [dataSource]="gameTableData">
+      <table mat-table [dataSource]="gameDataSource">
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef> Title </th>
           <td mat-cell *matCellDef="let element;"> {{ element.title }} </td>
