@@ -112,6 +112,10 @@ export class LobbyComponent implements OnInit {
     }
   }
 
+  getGame(index: number): Game {
+    return this.gameDataSource.data[index];
+  }
+
   requestGameData(): Observable<Game[]> {
     return this.gameService.findAll();
   }
@@ -127,6 +131,10 @@ export class LobbyComponent implements OnInit {
   setGameData(games: Game[]): void {
     this.gameDataSource.data = games;
     this.changeDetectorRefs.detectChanges();
+  }
+
+  getPlayer(index: number): Player {
+    return this.playerDataSource.data[index];
   }
 
   requestPlayerData(): Observable<Player[]> {
@@ -179,7 +187,7 @@ export class LobbyComponent implements OnInit {
   onJoinGameClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.SHOW, this.playerDataSource[index], this.gameDataSource],
+      data: [PlayerDialogState.SHOW, this.getPlayer(index), this.gameTitles],
       autoFocus: false
     }).afterClosed().subscribe(joinedGame => {
       if(joinedGame) this.refreshTable(true);
@@ -189,7 +197,7 @@ export class LobbyComponent implements OnInit {
   onAddGameClick(index: number): void {
     const dialogRef = this.dialog.open(GameDialogComponent, {
       width: "70%",
-      data: [GameDialogState.ADD, this.gameDataSource[index]],
+      data: [GameDialogState.ADD, this.getGame(index)],
       autoFocus: false
     }).afterClosed().subscribe((game: Game) => {
       if(game) this.requestAndSetFilteredTableData();
@@ -199,7 +207,7 @@ export class LobbyComponent implements OnInit {
   onEditGameClick(index: number): void {
     const dialogRef = this.dialog.open(GameDialogComponent, {
       width: "70%",
-      data: [GameDialogState.EDIT, this.gameDataSource[index]],
+      data: [GameDialogState.EDIT, this.getGame(index)],
       autoFocus: false
     }).afterClosed().subscribe((game: Game) => {
       if(game) this.refreshTable(false);
@@ -207,7 +215,7 @@ export class LobbyComponent implements OnInit {
   }
 
   onDeleteGameClick(index: number): void {
-    const game = this.gameDataSource[index];
+    const game = this.getGame(index);
     this.gameService.removeOne(game['_id']).subscribe(removed => {
       if(removed) {
         this.snackBar.open("Succesfully deleted game", "OK");
@@ -221,7 +229,7 @@ export class LobbyComponent implements OnInit {
   onAddPlayerClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.ADD, this.playerDataSource[index], this.gameTitles],
+      data: [PlayerDialogState.ADD, this.getPlayer(index), this.gameTitles],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
       if(player) this.refreshTable(false);
@@ -229,7 +237,7 @@ export class LobbyComponent implements OnInit {
   }
 
   onDeletePlayerClick(index: number): void {
-    const player = this.playerDataSource[index];
+    const player = this.getPlayer(index);
     this.playerService.removeOne(player['_id']).subscribe(removed => {
       if(removed) {
         this.snackBar.open("Succesfully deleted player", "OK");
@@ -243,7 +251,7 @@ export class LobbyComponent implements OnInit {
   onEditPlayerClick(index: number): void {
     const dialogRef = this.dialog.open(PlayerDialogComponent, {
       width: "70%",
-      data: [PlayerDialogState.EDIT, this.playerDataSource[index], this.gameTitles],
+      data: [PlayerDialogState.EDIT, this.getPlayer(index), this.gameTitles],
       autoFocus: false
     }).afterClosed().subscribe((player: Player) => {
       if(player) this.refreshTable(false);

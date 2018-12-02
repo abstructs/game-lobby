@@ -44,7 +44,7 @@ const ranks = ["1", "2", "3", "4", "5"];
 const scores = ["1000", "500", "100" , "2500", "5000", "7500", "10000"];
 const times = ["1 minute", "5 minutes", "10 minutes", "30 minutes", "1 hour"];
 const gamesPlayed = ["Diablo 3", "Black Desert Online", "League of Legends", "Counter Strike", "Starcraft 2", "Minecraft"];
-const playerStatuses = ["Available", "Unavailable"];
+const playerStatuses = ["Available", "Busy"];
 
 // Game Data To Populate With
 const titles = ["Diablo 3", "Black Desert Online", "League of Legends", "Counter Strike", "Starcraft 2", "Minecraft", "Fortnite"];
@@ -91,9 +91,26 @@ const games = titles.map((title => {
 console.log("\n----------------------------------");
 console.log("\nDropping old collections...");
 
-User.collection.drop();
-Player.collection.drop();
-Game.collection.drop();
+// Clear current database
+
+// mongo throws an error if the collection doesn't exist so we ignore only that err msg
+User.collection.drop(err => {
+    if(err && err.errmsg != "ns not found") {
+        console.log(err)
+    }
+});
+
+Player.collection.drop(err => {
+    if(err && err.errmsg != "ns not found") {
+        console.log(err)
+    }
+});
+
+Game.collection.drop(err => {
+    if(err && err.errmsg != "ns not found") {
+        console.log(err)
+    }
+});
 
 console.log("\nSaving new data...");
 

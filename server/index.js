@@ -14,10 +14,10 @@ app.use('/user', require('./app/users/routes'));
 app.use('/player', require('./app/players/routes'));
 app.use('/game', require('./app/games/routes'));
 
-app.use("/", express.static(__dirname + "/../client/dist/game-lobby"));
+app.use("/", express.static(__dirname + "/../dist/game-lobby"));
 
 app.get('/', (req, res) => {
     res.sendFile("index.html", { root: __dirname + "/../dist/game-lobby" });
 });
 
-app.listen(port, () => console.log(`Now listening on port ${port}`));
+app.listen(port, () => console.log(`Now listening on port ${port}\n Go to localhost:${port} on your browser to view the app.`));
