@@ -7,7 +7,7 @@ const fs = require('fs');
 
 const router = express.Router();
 
-const authenticateUser = (req, res, next) => {
+const authorizeUser = (req, res, next) => {
     const auth = req.get('Authorization');
 
     if(!auth) {
@@ -96,7 +96,7 @@ router.post('/add', (req, res) => {
     }
 });
 
-router.patch('/edit/:playerId', authenticateUser, (req, res) => {
+router.patch('/edit/:playerId', authorizeUser, (req, res) => {
     const player = req.body.player;
     const playerId = req.params.playerId;
 
@@ -114,7 +114,7 @@ router.patch('/edit/:playerId', authenticateUser, (req, res) => {
     }
 });
 
-router.delete('/delete/:id', authenticateUser, (req, res) => {
+router.delete('/delete/:id', authorizeUser, (req, res) => {
     const playerId = req.params.id;
     Player.findOneAndDelete({ _id: playerId }, (err, response) => {
         if(err) {

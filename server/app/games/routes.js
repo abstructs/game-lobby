@@ -6,7 +6,7 @@ const Game = require('./schema');
 
 const router = express.Router();
 
-const authenticateUser = (req, res, next) => {
+const authorizeUser = (req, res, next) => {
     const auth = req.get('Authorization');
 
     if(!auth) {
@@ -25,7 +25,7 @@ const authenticateUser = (req, res, next) => {
     }
 }
 
-router.get('/', authenticateUser, (req, res) => {
+router.get('/', authorizeUser, (req, res) => {
     Game.find({}, (err, games) => {
         if(err) {
             console.trace(err);
@@ -45,7 +45,7 @@ router.get('/titles', (req, res) => {
 
         res.status(200).send({ games });
     });
-})
+});
 
 router.get('/search/:field/:value', (req, res) => {
     const { field, value } = req.params;
@@ -79,7 +79,7 @@ router.post('/add', (req, res) => {
     }
 });
 
-router.patch('/edit/:gameId', authenticateUser, (req, res) => {
+router.patch('/edit/:gameId', authorizeUser, (req, res) => {
     const game = req.body.game;
     const gameId = req.params.gameId;
 
@@ -97,7 +97,7 @@ router.patch('/edit/:gameId', authenticateUser, (req, res) => {
     }
 });
 
-router.delete('/delete/:id', authenticateUser, (req, res) => {
+router.delete('/delete/:id', authorizeUser, (req, res) => {
     const gameId = req.params.id;
     Game.findOneAndDelete({ _id: gameId }, (err, response) => {
         if(err) {

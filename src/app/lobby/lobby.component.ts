@@ -30,7 +30,8 @@ export class LobbyComponent implements OnInit {
   gameTitles: Object[];
   gameTableColumns: string[];
 
-  searchQuery: SearchQuery;
+  playerSearchQuery: SearchQuery;
+  gameSearchQuery: SearchQuery;
 
   // playerDataSource: MatTableDataSource<Player[]>;
 
@@ -53,7 +54,13 @@ export class LobbyComponent implements OnInit {
     this.setSearchData({
       FIELD: "",
       QUERY: "",
-      TAB: this.getTab()
+      TAB: LobbyTab.PLAYERS
+    });
+
+    this.setSearchData({
+      FIELD: "",
+      QUERY: "",
+      TAB: LobbyTab.GAMES
     });
 
     this.getAllTableData();
@@ -86,25 +93,12 @@ export class LobbyComponent implements OnInit {
   private requestAndSetFilteredTableData() {
     this.loading = true;
 
-    if(!this.validSearchQuery()) {
-      this.getAllTableData();
-      return;
-    }
-
-    switch(this.searchQuery.TAB) {
+    switch(this.getTab()) {
       case LobbyTab.PLAYERS:
-        this.playerService.findByField(this.searchQuery).subscribe((players: Player[]) => {
-          this.setPlayerData(players);
-          this.loading = false;
-        });
+        this.playerSearchQuery.QUERY != "" ? this.getFilteredPlayerData() : this.getPlayerData();
         break;
       case LobbyTab.GAMES:
-        this.gameService.findByField(this.searchQuery).subscribe((games: Game[]) => {
-          const allGameTitles = games.map(game => ({ title: game.title }));
-          this.setGameTitles(allGameTitles);
-          this.setGameData(games);
-          this.loading = false;
-        });
+      this.gameSearchQuery.QUERY != "" ? this.getFilteredGameData() : this.getGameData();
         break;
       default:
         this.getAllTableData();
@@ -128,6 +122,15 @@ export class LobbyComponent implements OnInit {
     });
   }
 
+  getFilteredGameData() {
+    this.gameService.findByField(this.gameSearchQuery).subscribe((games: Game[]) => {
+      const allGameTitles = games.map(game => ({ title: game.title }));
+      this.setGameTitles(allGameTitles);
+      this.setGameData(games);
+      this.loading = false;
+    });
+  }
+
   setGameData(games: Game[]): void {
     this.gameDataSource.data = games;
     this.changeDetectorRefs.detectChanges();
@@ -144,6 +147,14 @@ export class LobbyComponent implements OnInit {
   getPlayerData() {
     this.loading = true;
     this.requestPlayerData().subscribe((players: Player[]) => {
+      this.setPlayerData(players);
+      this.loading = false;
+    });
+  }
+
+  getFilteredPlayerData() {
+    this.loading = true;
+    this.playerService.findByField(this.playerSearchQuery).subscribe((players: Player[]) => {
       this.setPlayerData(players);
       this.loading = false;
     });
@@ -259,27 +270,32 @@ export class LobbyComponent implements OnInit {
   }
 
   setSearchData(searchQuery: SearchQuery) {
-    this.searchQuery = searchQuery;
+    if(searchQuery.TAB == LobbyTab.PLAYERS) {
+      this.playerSearchQuery = searchQuery;
+    } else {
+      this.gameSearchQuery = searchQuery;
+    } 
   }
 
   refreshTable(refreshAll: boolean): void {
     if(refreshAll) {
-      this.setSearchData({ QUERY: "", FIELD: "", TAB: this.getTab() });
+      this.setSearchData({ QUERY: "", FIELD: "", TAB: this.LobbyTab.PLAYERS });
+      this.setSearchData({ QUERY: "", FIELD: "", TAB: this.LobbyTab.GAMES });
       this.getAllTableData();
     } else {
       this.requestAndSetFilteredTableData();
     }
   }
 
-  validSearchQuery(): boolean {
-    return this.searchQuery.FIELD != "" && this.searchQuery.QUERY != "";
+  searchQueriesAreEmpty(): boolean {
+      return this.playerSearchQuery.QUERY == "" && this.gameSearchQuery.QUERY == "";
   }
 
   onSearchClick() {
     this.bottomSheet.open(SearchBottomSheetComponent, {
       panelClass: 'min-width-65vw',
       data: [
-        this.searchQuery,
+        this.getTab() == LobbyTab.PLAYERS ? this.playerSearchQuery : this.gameSearchQuery,
         this.getTab(), 
         (searchQuery: SearchQuery) => this.setSearchData(searchQuery), 
         (refreshAll: boolean) => this.refreshTable(refreshAll)]
