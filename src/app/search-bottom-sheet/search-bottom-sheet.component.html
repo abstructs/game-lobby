@@ -1,7 +1,7 @@
 <div [formGroup]="searchForm" class="container">
 
   <mat-form-field class="width-50">
-    <mat-select formControlName="field" placeholder="Select a field to seach by">
+    <mat-select (selectionChange)="onSearch()" formControlName="field" placeholder="Select a field to seach by">
       <mat-option *ngFor="let field of getFields()" [value]="field">
         {{ field }}
       </mat-option>
@@ -10,7 +10,7 @@
   </mat-form-field>
 
   <mat-form-field>
-    <input (keyup)="onSearchKeyUp()" formControlName="query" matInput placeholder="Search">
+    <input (keyup)="onSearch()" formControlName="query" matInput placeholder="Search">
     <mat-error *ngIf="query.invalid && (query.dirty || query.touched)">Invalid search query</mat-error>
   </mat-form-field>
 

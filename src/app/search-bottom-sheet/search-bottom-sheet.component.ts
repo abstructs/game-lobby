@@ -112,7 +112,7 @@ export class SearchBottomSheetComponent {
   }
 
   // gets filtered data and refreshes table
-  onSearchKeyUp() {
+  onSearch() {
     if(this.searchForm.valid) {
       let field = this.field.value.toLowerCase();
       const query = this.query.value.toLowerCase();
